@@ -20,3 +20,5 @@ for i = 1:size(fileNames,2)
     save (hogSave, 'hog');
     save (lbpSave, 'lbp'); 
 end
+
+end
