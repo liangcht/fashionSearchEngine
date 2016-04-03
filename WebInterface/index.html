@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Fashion search engine</title>
+    <script type="text/javascript" src="script.js"></script>
+  </head>
+  <body>
+    <h1>Fashion search engine</h1>
+    <p>Choose Type</p>
+    <form action="/chooseType" method="post">
+      <label for="type">type：</label>
+      <input type="radio" name="type" value="T-Shirt">T-Shirt
+      <input type="radio" name="type" value="Blouses">Blouses
+      <input type="submit" value="Submit">
+    </form>
+
+    <input type="file" id="getimage" />
+    <fieldset>
+      <legend>Your image here</legend>
+      <div id="imgstore"></div>
+    </fieldset>
+
+    <form>
+      <span>Top: <input type="text" id="top-region" placeholder="0"> Bottom: <input type="text" id="bottom-region"  placeholder="260"></span><br>
+      <span>Left: <input type="text" id="left-region" placeholder="0"> Right: <input type="text" id="right-region" placeholder="200"></span><br>
+      <input type="button" onclick="cropFunc()" value="Crop">
+
+    </form>
+    <hr><!-- 這是分隔線 -->
+
+    <h3>bar</h3>
+    <ul>
+      <li>home</li>
+      <li>some other page</li>
+    </ul>
+  </body>
+</html>
+
+
