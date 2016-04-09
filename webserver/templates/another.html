@@ -18,7 +18,7 @@
     			{% set count = 1 %}
     			{% for entry in entries[:10] %}
       			<div class="tab" id="tab{{count}}"><a href="javascript:tabber1.next()" title="Click to view next image"><img src={{entry.path}} alt="" /></a>
-        		<p class="info"> <strong>Picture title</strong>Picture description and stuff goes right here.</p>
+        		<p class="info"> <strong>Picture id: {{entry.id}}</strong>Picture description and stuff goes right here.</p>
       			</div>
       			{% set count = count + 1 %}
       			{% else %}
@@ -29,7 +29,7 @@
     			<ul id="tab-container-1-nav">
     				{% set count = 1 %}
     				{% for entry in entries[:10] %}
-    				<li><a href="#tab{{count}}"><img src={{entry.path}} alt="" /></a></li>
+    				<li><a href="#tab{{count}}"><img src={{entry.path}} alt="" width="50" height="50" /></a></li>
     				{% set count = count + 1 %}
     				{% else %}
     				<li><em>Unbelievable.  No entries here so far</em>
