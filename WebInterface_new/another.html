@@ -1,0 +1,8 @@
+
+  <ul class=entries>
+  {% for entry in entries %}
+    <li>{{ entry.type }} <img src=entry.path height="100" width="100">
+  {% else %}
+    <li><em>Unbelievable.  No entries here so far</em>
+  {% endfor %}
+  </ul>
