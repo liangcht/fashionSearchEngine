@@ -11,14 +11,36 @@
     <div class="container header">
       <h1>Uploaded pictrue</h1>
       <h3>This is the uploaded picture</h3>
+      <div class="span-5">
+            <div class="tab" id="tab1"><img src="/uploads/{{filename}}" alt="" height="60" />
+            <p class="info"> <strong>Input image</strong></p>
+            </div>
+          </div>
     </div>
     <div class="container content">
     	<div id="tab-container-1">
-    		<div class="span-13">
-      			<div class="tab" id="tab1"><img src="/uploads/{{filename}}" alt="" />
-        		<p class="info"> <strong>Picture name: {{filename}}</strong>Picture description and stuff goes right here.</p>
-      			</div>
-      		</div>
+          <div class="span-13">
+          {% set count = 1 %}
+          {% for entry in entries[:10] %}
+            <div class="tab" id="tab{{count}}"><a href="javascript:tabber1.next()" title="Click to view next image"><img src={{entry.path}} alt="" /></a>
+            <p class="info"> <strong>Picture id: {{entry.id}}</strong>Picture description and stuff goes right here.</p>
+            </div>
+            {% set count = count + 1 %}
+            {% else %}
+          <li><em>Unbelievable.  No entries here so far</em>
+            {% endfor %}
+          </div>
+        <div class="span-5">
+          <ul id="tab-container-1-nav">
+            {% set count = 1 %}
+            {% for entry in entries[:10] %}
+            <li><a href="#tab{{count}}"><img src={{entry.path}} alt="" width="50" height="50" /></a></li>
+            {% set count = count + 1 %}
+            {% else %}
+            <li><em>Unbelievable.  No entries here so far</em>
+            {% endfor %}
+          </ul>
+        </div>
   			<div class="span-5 last">
       			<h2>Filter result</h2>
       			<p>Maybe some filter options here.</p>
