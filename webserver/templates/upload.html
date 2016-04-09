@@ -9,21 +9,20 @@
   </head>
   <body>
     <div class="container header">
-      <h1>Uploaded pictrue</h1>
-      <h3>This is the uploaded picture</h3>
-      <div class="span-5">
-            <div class="tab" id="tab1"><img src="/uploads/{{filename}}" alt="" height="60" />
-            <p class="info"> <strong>Input image</strong></p>
-            </div>
-          </div>
+      <h1>Similar outfits</h1>
+      <h3>These are similiar outfits found online</h3>
     </div>
     <div class="container content">
     	<div id="tab-container-1">
+        <div class="span-5">
+            <img src="/uploads/{{filename}}" width="200" alt="" />
+            <p class="info"><strong>upload image</strong></p>
+        </div>
           <div class="span-13">
           {% set count = 1 %}
           {% for entry in entries[:10] %}
-            <div class="tab" id="tab{{count}}"><a href="javascript:tabber1.next()" title="Click to view next image"><img src={{entry.path}} alt="" /></a>
-            <p class="info"> <strong>Picture id: {{entry.id}}</strong>Picture description and stuff goes right here.</p>
+            <div class="tab" id="tab{{count}}"><a href={{entry.source}} target="_blank" title="Click to view next image"><img src={{entry.path}} alt="" /></a>
+            <p class="info"> <strong>{{entry.name}}</strong>Type: {{entry.type}}, Gender: {{entry.gender}}</p>
             </div>
             {% set count = count + 1 %}
             {% else %}
@@ -41,11 +40,6 @@
             {% endfor %}
           </ul>
         </div>
-  			<div class="span-5 last">
-      			<h2>Filter result</h2>
-      			<p>Maybe some filter options here.</p>
-      			<p>result analysis: ex.T-shirt, mostly white, short peice...</p>
-    		</div>
   		</div>
     </div>
     <div class="container footer">

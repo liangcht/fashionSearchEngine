@@ -3,6 +3,7 @@ import os
 # from fashionSearchEngine import type_classification
 from flask import Flask, g, render_template, request, url_for, redirect
 from werkzeug import secure_filename
+from sets import Set
 
 SQLITE_DB_PATH = '../amazon/test.db'
 # SQLITE_DB_SCHEMA = '../amazon/try_db.sql'
@@ -39,16 +40,21 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            idset = type_classification.getNeighbor('/uploads/'+filename)
+            # idset = type_classification.getNeighbor('static/uploads/'+filename)
             # for debug
-            # idset = range(1, 11)
+            idset = range(1, 11)
             db = get_db()
             result = []
+            nameSet = set()
             for _id_ in idset:
                 rst = db.execute(
                     'SELECT name, gender, type, source, path FROM amazon WHERE id = ?', (_id_, )
                 ).fetchone()
-                result.append(rst)
+                if rst[0] not in nameSet:
+                    result.append(rst)
+                    nameSet.add(rst[0])
+                if len(result) >= 10:
+                    break
             entries = [dict(name=row[0], gender=row[1], type=row[2], source=row[3], path=row[4].replace("/Users/tj474474/Development/visual_database/amazon", "")) for row in result]
             return render_template('upload.html', entries=entries, filename=filename)
     return render_template('index.html', entries=[dict(error='invalid image type.')])
@@ -60,9 +66,9 @@ def chooseType():
     type_name = request.form.get('type')
     # valid_ids = [row[0] for row in cursor]
     result = db.execute(
-        'SELECT type, path, id FROM amazon WHERE type = ? LIMIT = 10', (type_name, )
+        'SELECT type, path, id FROM amazon WHERE type = ? LIMIT 10', (type_name, )
     )
-    entries = [dict(type=row[0], path=row[1].replace("/Users/tj474474/Development/visual_database/amazon/crawlImages", "/crawlImages"), id=row[2]) for row in result.fetchall()]
+    entries = [dict(type=row[0], path=row[1].replace("/Users/tj474474/Development/visual_database/amazon", ""), id=row[2]) for row in result.fetchall()]
     return render_template('result.html', entries=entries)
 
 @app.route('/')
