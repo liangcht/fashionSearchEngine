@@ -56,10 +56,10 @@ def getMatrix():
 	for index, path in enumerate(d["path"].values):
 		print index
 		# download an image
-		my_image_url = path  # paste your URL here
+		my_image_url = "/Users/tj474474/Development/visual_database/cropImageNoResize/" #path  # paste your URL here
 
 		# transform it and copy it into the net
-		image = caffe.io.load_image(my_image_url)
+		image = caffe.io.load_image(my_image_url + "crop" + str(index + 1) + ".jpg")
 		net.blobs['data'].data[...] = transformer.preprocess('data', image)
 
 		# perform classification
@@ -80,7 +80,7 @@ def getMatrix():
 		#print 'probabilities and labels:'
 		#print zip(output_prob[top_inds], labels[top_inds])
 
-	np.save(open("cnn_prob.npy", 'wb'), cnn_ft)
+	np.save(open("crop_cnn_prob.npy", 'wb'), cnn_ft)
 
 def getNeighbor(query_path=""):
 
@@ -96,9 +96,14 @@ def getNeighbor(query_path=""):
 	cnn_ft = np.load("cnn_prob.npy")
 	dist = np.apply_along_axis(getDist, 1, cnn_ft, query_ft)
 
+	top_ctg = open("top_categories.txt")
+	top_index = [int(i.split(',')[0]) for i in top_ctg]
+	cnn_ft = cnn_ft[:, top_index]
+
 	np.save(open("dist.npy", 'wb'), dist)
 	return list(dist.argsort()[:10] + 1)
 
 if __name__ == '__main__':
 
-	print getNeighbor("/Users/tj474474/Development/visual_database/amazon/crawlImages/16449.jpg")
+	getMatrix()
+	#print getNeighbor("/Users/tj474474/Development/visual_database/amazon/crawlImages/16449.jpg")
