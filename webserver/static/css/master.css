@@ -36,6 +36,9 @@ opacity: 0.99;
 }
 
 .tab img {
+display: block;
+margin-left: auto;
+margin-right: auto;
 padding:5px;
 border:1px solid #eee;
 }
