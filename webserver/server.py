@@ -33,9 +33,9 @@ def chooseType():
     type_name = request.form.get('type')
     # valid_ids = [row[0] for row in cursor]
     result = db.execute(
-        'SELECT type, path FROM amazon WHERE type = ?', (type_name, )
+        'SELECT type, path, id FROM amazon WHERE type = ?', (type_name, )
     )
-    entries = [dict(type=row[0], path=row[1].replace("/Users/tj474474/Development/visual_database/amazon/crawlImages", "/sample_image")) for row in result.fetchall()]
+    entries = [dict(type=row[0], path=row[1].replace("/Users/tj474474/Development/visual_database/amazon/crawlImages", "/sample_image"), id=row[2]) for row in result.fetchall()]
     return render_template('another.html', entries=entries)
 
 
