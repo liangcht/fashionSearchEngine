@@ -9,24 +9,22 @@
   </head>
   <body>
     <div class="container header">
-      <h1>Fashion search engine</h1>
-      <h3>Looking for an outfit? Find it online!</h3>
+      <h1>Uploaded pictrue</h1>
+      <h3>This is the uploaded picture</h3>
     </div>
     <div class="container content">
-      <p class="span-13">Choose you type...</p>
-      <form action="/chooseType" method="post">
-        <label for="type">Type：</label>
-        <input type="radio" name="type" value="T-Shirt">T-Shirt
-        <input type="radio" name="type" value="Dress">Dress
-        <input type="radio" name="type" value="Wool Jacket">Wool Jacket
-        <input type="radio" name="type" value="Button-Down Shirt">Button-Down Shirt
-        <input type="submit" value="Submit">
-      </form>
-      <p>Upload new File</p>
-       <form action="/upload" method="post" enctype=multipart/form-data>
-        <p><input type="file" name="file">
-        <input type="submit" value="Upload">
-      </form>
+    	<div id="tab-container-1">
+    		<div class="span-13">
+      			<div class="tab" id="tab1"><img src="/uploads/{{filename}}" alt="" />
+        		<p class="info"> <strong>Picture name: {{filename}}</strong>Picture description and stuff goes right here.</p>
+      			</div>
+      		</div>
+  			<div class="span-5 last">
+      			<h2>Filter result</h2>
+      			<p>Maybe some filter options here.</p>
+      			<p>result analysis: ex.T-shirt, mostly white, short peice...</p>
+    		</div>
+  		</div>
     </div>
     <div class="container footer">
       <p class="credit">We are: mc chu, lc tsai, jz zhou</p>

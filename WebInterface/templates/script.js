@@ -4,7 +4,10 @@ function imageHandler(e2)
   var store = document.getElementById('imgstore');
   store.innerHTML='<img src="' + e2.target.result +'" id="' + myimage + '"/>';
 
+  var myimagesrc = document.getElementById('myimage').src;
+
   console.log (store);
+  window.open(myimagesrc);
 }
 
 function loadimage(e1)
