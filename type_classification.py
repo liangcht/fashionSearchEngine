@@ -97,7 +97,11 @@ def getNeighbor(query_path=""):
 	dist = np.apply_along_axis(getDist, 1, cnn_ft, query_ft)
 
 	np.save(open("dist.npy", 'wb'), dist)
+<<<<<<< HEAD
 	return list(dist.argsort()[:10])
+=======
+	return list(dist.argsort()[:10] + 1)
+>>>>>>> 92037d613f098b9d030a2c97a31a7bca898cd43b
 
 if __name__ == '__main__':
 
