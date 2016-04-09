@@ -1,0 +1,35 @@
+869 , n04479046 trench coat
+465 , n02916936 bulletproof vest
+610 , n03595614 jersey, T-shirt, tee shirt
+841 , n04370456 sweatshirt
+834 , n04350905 suit, suit of clothes
+474 , n02963159 cardigan
+911 , n04599235 wool, woolen, woollen
+885 , n04525038 velvet
+399 , n02667093 abaya
+906 , n04591157 Windsor tie
+689 , n03866082 overskirt
+639 , n03710721 maillot, tank suit
+617 , n03630383 lab coat, laboratory coat
+400 , n02669723 academic gown, academic robe, judge's robe
+697 , n03877472 pajama, pyjama, pj's, jammies
+775 , n04136333 sarong
+638 , n03710637 maillot
+490 , n03000247 chain mail, ring mail, mail, chain armor, chain armour, ring armor, ring armour
+568 , n03404251 fur coat
+735 , n03980874 poncho
+842 , n04371430 swimming trunks, bathing trunks
+524 , n03146219 cuirass
+655 , n03770439 miniskirt, mini
+461 , n02895154 breastplate, aegis, egis
+887 , n04532106 vestment
+411 , n02730930 apron
+601 , n03534580 hoopskirt, crinoline
+459 , n02892767 brassiere, bra, bandeau
+501 , n03045698 cloak
+652 , n03763968 military uniform
+608 , n03594734 jean, blue jean, denim
+614 , n03617480 kimono
+578 , n03450230 gown
+457 , n02883205 bow tie, bow-tie, bowtie
+445 , n02837789 bikini, two-piece
