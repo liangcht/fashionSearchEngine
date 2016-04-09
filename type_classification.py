@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 import pandas as pd
 import scipy.io as sio
 import numpy as np
+<<<<<<< HEAD
 import sys
 import os
 os.environ['GLOG_minloglevel'] = '3' 
@@ -9,11 +10,14 @@ import caffe
 
 def getDist(target, query):
 	return np.linalg.norm(query - target)
+=======
+>>>>>>> c378eb0b2dc9114badd0ff5701b553d045215556
 
 if __name__ == '__main__':
 
 	engine = create_engine('sqlite:///amazon/test.db')
 	d = pd.read_sql_table('Amazon', engine)
+<<<<<<< HEAD
 	#sample_d = d[d["type"].isin(["T-Shirt", "Wool Jacket", "Buttom-Down Shirt", "Dress"])]
 	#hogs = np.array([sio.loadmat("./hog/hog10.mat")['hog'][0] for id in sample_d["id"]])
 
@@ -93,4 +97,19 @@ if __name__ == '__main__':
 	id = dist.argsort()[:10]
 	print id
 
+=======
+
+	h_form = sio.loadmat('hog1.mat')['hog']
+	hogs = np.empty([0, h_form.shape[1]])
+
+	for id in d["id"]:
+		hog = sio.loadmat("hog1.mat")['hog']
+		print id
+		hogs = np.append(hogs, hog, axis = 0)
+		print id, "nn"
+		#hogs = np.array(hogs)
+
+	#hogs = np.array([sio.loadmat("hog1.mat")['hog'] for id in d["id"]])
+	#data = np.array(data)
+>>>>>>> c378eb0b2dc9114badd0ff5701b553d045215556
 
