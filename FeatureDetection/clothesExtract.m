@@ -1,4 +1,4 @@
-orig_img = imread('18152.jpg');
+orig_img = imread('../sample_image/8386.jpg');
 gray_img = rgb2gray(orig_img);
 bw = im2bw(gray_img, 0.95);
 edge_img = edge(bw, 'Canny');
@@ -14,8 +14,6 @@ r = regionprops(cropped_img(1:size(cropped_img, 1)/4, :), 'Area');
 
 % chop off head
 x_start = bbMatrix(2); 
-% figure, imshow(bw);
-
 if r.Area / ((size(cropped_img, 1)/4) * size(cropped_img, 2)) < 0.8
     for i = bbMatrix(2)+bbMatrix(4)/4:-1:bbMatrix(2)
         if sum(bw(round(i), bbMatrix(1):bbMatrix(1)+bbMatrix(3))) > bbMatrix(3)/2 
@@ -69,5 +67,4 @@ if h / w > 2 % if it is full length picture
 end
 
 figure, imshow(masked_img);
-
 title('croped image');

@@ -1,24 +1,34 @@
 <html>
-  <head>
-    <meta charset="utf-8">
+  <head xmlns="http://www.w3.org/1999/xhtml">
     <meta name="viewport" content="width=device-width">
     <title>Fashion search engine</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <link href="css/master.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="css/screen.css" rel="stylesheet" type="text/css" media="screen" />
+    <script type="text/javascript" src="js/yetii-min.js"></script>
   </head>
   <body>
-    <h1>Fashion search engine</h1>
-    <p>輸入type</p>
-    <form action="/chooseType" method="post">
-      <label for="type">type：</label>
-      <input type="radio" name="type" value="T-Shirt">T-Shirt
-      <input type="radio" name="type" value="Blouses">Blouses
-      <input type="submit" value="Submit">
-    </form>
-    <hr><!-- 這是分隔線 -->
-
-    <h3>bar</h3>
-    <ul>
-      <li>home</li>
-      <li>some other page</li>
-    </ul>
+    <div class="container header">
+      <h1>Fashion search engine</h1>
+      <h3>Looking for an outfit? Find it online!</h3>
+    </div>
+    <div class="container content">
+    <p class="span-13">Choose you type...</p>
+      <form action="/chooseType" method="post">
+        <label for="type">Type：</label>
+        <input type="radio" name="type" value="T-Shirt">T-Shirt
+        <input type="radio" name="type" value="Dress">Dress
+        <input type="submit" value="Submit">
+      </form>
+    </div>
+    <div class="container footer">
+      <p class="credit">Build by: <a>___</a></p>
+      <p>This is a prototype.</p>
+    </div>
+    <script type="text/javascript">
+      var tabber1 = new Yetii({
+      id: 'tab-container-1'
+      });
+    </script>
   </body>
 </html>
