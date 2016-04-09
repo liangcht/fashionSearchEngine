@@ -1,8 +1,51 @@
-
-  <ul class=entries>
-  {% for entry in entries %}
-    <li>{{ entry.type }} <img src=entry.path height="100" width="100">
-  {% else %}
-    <li><em>Unbelievable.  No entries here so far</em>
-  {% endfor %}
-  </ul>
+<html>
+  <head xmlns="http://www.w3.org/1999/xhtml">
+    <meta name="viewport" content="width=device-width">
+    <title>Fashion search engine</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <link href="css/master.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="css/screen.css" rel="stylesheet" type="text/css" media="screen" />
+    <script type="text/javascript" src="js/yetii-min.js"></script>
+  </head>
+  <body>
+    <div class="container header">
+      <h1>Search results</h1>
+      <h3>These are similar outfits available online</h3>
+    </div>
+    <div class="container content">
+    	<div id="tab-container-1">
+    		<div class="span-13">
+    			{% set count = 1 %}
+    			{% for entry in entries[:10] %}
+      			<div class="tab" id="tab{{count}}"><a href="javascript:tabber1.next()" title="Click to view next image"><img src={{entry.path}} alt="" /></a>
+        		<p class="info"> <strong>Picture title</strong>Picture description and stuff goes right here.</p>
+      			</div>
+      			{% set count = count + 1 %}
+      			{% else %}
+    			<li><em>Unbelievable.  No entries here so far</em>
+      			{% endfor %}
+      		</div>
+    		<div class="span-5">
+    			<ul id="tab-container-1-nav">
+    				{% set count = 1 %}
+    				{% for entry in entries[:10] %}
+    				<li><a href="#tab{{count}}"><img src={{entry.path}} alt="" /></a></li>
+    				{% set count = count + 1 %}
+    				{% else %}
+    				<li><em>Unbelievable.  No entries here so far</em>
+    				{% endfor %}
+  				</ul>
+  			</div>
+  		</div>
+    </div>
+    <div class="container footer">
+      <p class="credit">Build by: <a>___</a></p>
+      <p>This is a prototype.</p>
+    </div>
+    <script type="text/javascript">
+      var tabber1 = new Yetii({
+      id: 'tab-container-1'
+      });
+    </script>
+  </body>
+</html>

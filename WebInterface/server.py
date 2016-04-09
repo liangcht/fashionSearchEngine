@@ -1,8 +1,7 @@
 import sqlite3
 from flask import Flask, g, render_template, request
-from flask.ext.images import resized_img_src
 
-app = Flask(__name__, static_url_path = "", static_folder = "static")
+app = Flask(__name__)
 SQLITE_DB_PATH = '../amazon/test.db'
 # SQLITE_DB_SCHEMA = '../amazon/try_db.sql'
 
@@ -35,7 +34,7 @@ def chooseType():
     result = db.execute(
         'SELECT type, path FROM amazon WHERE type = ?', (type_name, )
     )
-    entries = [dict(type=row[0], path=row[1].replace("/Users/tj474474/Development/visual_database/amazon/crawlImages", "/sample_image")) for row in result.fetchall()]
+    entries = [dict(type=row[0], path=row[1].replace("/Users/tj474474/Development/visual_database", "../../")) for row in result.fetchall()]
     return render_template('another.html', entries=entries)
 
 
