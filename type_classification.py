@@ -44,43 +44,43 @@ def getMatrix():
 	pass
 	####### Get vector of whole database ############
 	# Loading Database
-	#engine = create_engine('sqlite:///amazon/test.db')
-	#d = pd.read_sql_table('Amazon', engine)
+	engine = create_engine('sqlite:///amazon/test.db')
+	d = pd.read_sql_table('Amazon', engine)
 
-	#sample_d = d[d["type"].isin(["T-Shirt", "Wool Jacket", "Buttom-Down Shirt", "Dress"])]
-	#hogs = np.array([sio.loadmat("./hog/hog10.mat")['hog'][0] for id in sample_d["id"]])
+	# sample_d = d[d["type"].isin(["T-Shirt", "Wool Jacket", "Buttom-Down Shirt", "Dress"])]
+	# hogs = np.array([sio.loadmat("./hog/hog10.mat")['hog'][0] for id in sample_d["id"]])
 
 	# Get the layer 7 feature of each picture in database
-	# cnn_ft = np.empty([d.shape[0], 1000])
+	cnn_ft = np.empty([d.shape[0], 1000])
 
-	# for index, path in enumerate(d["path"].values):
-	# 	print index
-	# 	# download an image
-	# 	my_image_url = path  # paste your URL here
+	for index, path in enumerate(d["path"].values):
+		print index
+		# download an image
+		my_image_url = path  # paste your URL here
 
-	# 	# transform it and copy it into the net
-	# 	image = caffe.io.load_image(my_image_url)
-	# 	net.blobs['data'].data[...] = transformer.preprocess('data', image)
+		# transform it and copy it into the net
+		image = caffe.io.load_image(my_image_url)
+		net.blobs['data'].data[...] = transformer.preprocess('data', image)
 
-	# 	# perform classification
-	# 	net.forward()
+		# perform classification
+		net.forward()
 
-	# 	# obtain the output probabilities
-	# 	#output_prob = net.blobs['prob'].data[0]
-	# 	cnn_ft[index, ] = net.blobs['prob'].data[0]
+		# obtain the output probabilities
+		#output_prob = net.blobs['prob'].data[0]
+		cnn_ft[index, ] = net.blobs['prob'].data[0]
 
-	# 	# sort top five predictions from softmax output
-	# 	#top_inds = output_prob.argsort()[::-1][:5]
+		# sort top five predictions from softmax output
+		#top_inds = output_prob.argsort()[::-1][:5]
 
-	# 	# load ImageNet labels
-	# 	#labels_file = caffe_root + 'data/ilsvrc12/synset_words.txt'
+		# load ImageNet labels
+		#labels_file = caffe_root + 'data/ilsvrc12/synset_words.txt'
 	    
-	# 	#labels = np.loadtxt(labels_file, str, delimiter='\t')
+		#labels = np.loadtxt(labels_file, str, delimiter='\t')
 
-	# 	#print 'probabilities and labels:'
-	# 	#print zip(output_prob[top_inds], labels[top_inds])
+		#print 'probabilities and labels:'
+		#print zip(output_prob[top_inds], labels[top_inds])
 
-	# np.save(open("cnn_prob.npy", 'wb'), cnn_ft)
+	np.save(open("cnn_prob.npy", 'wb'), cnn_ft)
 
 def getNeighbor(query_path=""):
 
@@ -97,7 +97,7 @@ def getNeighbor(query_path=""):
 	dist = np.apply_along_axis(getDist, 1, cnn_ft, query_ft)
 
 	np.save(open("dist.npy", 'wb'), dist)
-	return dist.argsort()[:10]
+	return list(dist.argsort()[:10].values)
 
 if __name__ == '__main__':
 
