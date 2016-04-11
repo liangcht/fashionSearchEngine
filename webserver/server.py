@@ -2,6 +2,7 @@ import sqlite3
 import os
 import base64
 import sys
+import numpy as np
 from binascii import a2b_base64
 import type_classification
 from flask import Flask, g, render_template, request, url_for, redirect
@@ -38,15 +39,12 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-
 @app.route('/upload_img', methods=['GET', 'POST'])
 def upload_img():
     img = request.form['img']
     print(img)
-
     img += '=' * (-len(img) % 4)
     decode_img = base64.decodestring(img)
-
     try:
         fd = open('static/uploads/test.png', 'wb')
         fd.write(decode_img)
@@ -62,13 +60,13 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            idset = type_classification.getNeighbor('static/uploads/'+filename)
+            idset_querydata = type_classification.getNeighbor('static/uploads/'+filename)
             # for debug
-            # idset = range(1, 11)
+            # idset_querydata[0] = range(1, 11)
             db = get_db()
             result = []
             nameSet = set()
-            for _id_ in idset:
+            for _id_ in idset_querydata[0]:
                 rst = db.execute(
                     'SELECT name, gender, type, source, path FROM amazon WHERE id = ?', (_id_, )
                 ).fetchone()
@@ -77,8 +75,28 @@ def upload_file():
                     nameSet.add(rst[0])
                 if len(result) >= 10:
                     break
+            
+            cnn_ft = np.load("crop_cnn_prob.npy")
+            top_ctg = open("top_categories.txt")
+            top_index = [int(i.split(',')[0]) for i in top_ctg]
+            cnn_ft = cnn_ft[:, top_index] 
+            cnn_ft = np.transpose(np.transpose(cnn_ft) / cnn_ft.sum(axis=1))
+            
+            top_ctg = open("top_categories.txt")
+            top_col = [i.split(',')[1].strip()[10:] for i in top_ctg]
+            pic_data = []
+            for _index_ in idset_querydata[0]:
+                _index_ -= 1
+                col = cnn_ft[_index_].argsort()[::-1][:5]
+                col_score = []
+                for c in col:
+                    col_score.append(( top_col[c], cnn_ft[_index_][c] )) 
+                pic_data.append(col_score)
+
+            # idset_querydata[1] = ((1,1), (1,1),(1,1),(1,1),(1,1))
+
             entries = [dict(name=row[0], gender=row[1], type=row[2], source=row[3], path=row[4].replace("/Users/tj474474/Development/visual_database/amazon", "")) for row in result]
-            return render_template('upload.html', entries=entries, filename=filename)
+            return render_template('upload.html', entries=entries, filename=filename, pic_data=pic_data, querydata=idset_querydata[1])
     return render_template('index.html', entries=[dict(error='invalid image type.')]) 
 
 @app.route('/chooseType', methods=['POST'])
