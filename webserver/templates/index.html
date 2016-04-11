@@ -6,6 +6,11 @@
     <link href="css/master.css" rel="stylesheet" type="text/css" media="screen" />
     <link href="css/screen.css" rel="stylesheet" type="text/css" media="screen" />
     <script type="text/javascript" src="js/yetii-min.js"></script>
+    <!-- input image crop -->
+    <script type="text/javascript" src="js/script.js"></script>
+    <script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery.Jcrop.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/jquery.Jcrop.css" />
   </head>
   <body>
     <div class="container header">
@@ -15,6 +20,7 @@
     <div class="container content">
       <p>you can...</p>
       <div id="tab-container-1">
+        <!--
         <div class="span-8">
       <h2>Choose a type</h2>
       <form action="/chooseType" method="post">
@@ -25,15 +31,41 @@
         <input type="submit" value="Submit">
       </form>
     </div>
-    <div class="span-2">
+  -->
+    <!--
+    <div>
+    <input type="file" id="getimage" />
+    <fieldset>
+      <legend>Your image here</legend>
+      <div id="imgstore"></div>
+    </fieldset>
+    <fieldset>
+      <legend>Crop image here</legend>
+      <canvas id="mycanvas"></canvas>
+    </fieldset>
+    
+
+    <form id="updatecrop">
+      <input id="x" name="x" />
+      <input id="y" name="y" />
+      <input id="w" name="w" />
+      <input id="h" name="h" />
+      <input type="button" value="Crop Image" class="btn btn-large btn-inverse" onclick="crop_image()" />
+    </form>
     </div>
+    <div class="span-5">
+
+    </div>
+  -->
     <div class="span-8">
-      <h2>Upload new File</h2>
+      <fieldset>
+      <legend><h2> Upload new File </h2></legend>
        <form action="/upload" method="post" enctype=multipart/form-data>
-        <p><input type="file" name="file">
+        <p><input type="file" name="file"/>
         <input type="submit" value="Upload">
       </form>
     </div>
+    </fieldset>
     </div>
     </div>
     <div class="container footer">
