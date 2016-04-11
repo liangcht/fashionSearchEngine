@@ -32,38 +32,26 @@
       </form>
     </div>
   -->
-    <!--
     <div>
-    <input type="file" id="getimage" />
     <fieldset>
-      <legend>Your image here</legend>
-      <div id="imgstore"></div>
+      <legend><h2>Upload an image</h2></legend>
+      <form action="/upload" method="post" enctype=multipart/form-data>
+    <input type="file" id="getimage" name="file"/>
+    <div id="imgstore"></div>
+    <input type="button" value="Crop Image" class="btn btn-large btn-inverse" onclick="crop_image()" />
+    <input type="submit" value="Upload">
+    </form>
+  
     </fieldset>
-    <fieldset>
+    <!--
+    <fieldset id="save">
       <legend>Crop image here</legend>
       <canvas id="mycanvas"></canvas>
     </fieldset>
-    
-
-    <form id="updatecrop">
-      <input id="x" name="x" />
-      <input id="y" name="y" />
-      <input id="w" name="w" />
-      <input id="h" name="h" />
-      <input type="button" value="Crop Image" class="btn btn-large btn-inverse" onclick="crop_image()" />
-    </form>
+    -->
     </div>
     <div class="span-5">
 
-    </div>
-  -->
-    <div class="span-8">
-      <fieldset>
-      <legend><h2> Upload new File </h2></legend>
-       <form action="/upload" method="post" enctype=multipart/form-data>
-        <p><input type="file" name="file"/>
-        <input type="submit" value="Upload">
-      </form>
     </div>
     </fieldset>
     </div>

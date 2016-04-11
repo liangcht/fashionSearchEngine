@@ -61,6 +61,10 @@ function crop_image()
 
   var saveImg = drawimg.toDataURL("image/png");
 
+  //var newimg = new Image();
+  //newimg.src = drawimg.toDataURL("image/png");
+  //$('#save').append(newimg);
+
   $.ajax({
     url: '/upload_img',
     data: {'img': saveImg},

@@ -41,10 +41,14 @@ def allowed_file(filename):
 
 @app.route('/upload_img', methods=['GET', 'POST'])
 def upload_img():
-    img = request.form['img'] + "=="
-    decode_img = img.decode("base64")
+    img = request.form['img']
+    print(img)
+
+    img += '=' * (-len(img) % 4)
+    decode_img = base64.decodestring(img)
+
     try:
-        fd = open('static/uploads/test.png', 'w')
+        fd = open('static/uploads/test.png', 'wb')
         fd.write(decode_img)
         fd.close()
         return render_template('upload.html', entries=[], filename='/uploads/g1.png')
