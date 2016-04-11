@@ -1,8 +1,16 @@
 import sqlite3
 import os
+<<<<<<< HEAD
+=======
+import base64
+import sys
+from binascii import a2b_base64
+>>>>>>> 0e3ed68642cf7741d0738ede77fed69fc9c0d6bc
 import type_classification
 from flask import Flask, g, render_template, request, url_for, redirect
+from flask.ext.images import resized_img_src
 from werkzeug import secure_filename
+from werkzeug.datastructures import FileStorage
 from sets import Set
 
 SQLITE_DB_PATH = '../amazon/test.db'
@@ -33,6 +41,23 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
+
+@app.route('/upload_img', methods=['GET', 'POST'])
+def upload_img():
+    img = request.form['img']
+    print(img)
+
+    img += '=' * (-len(img) % 4)
+    decode_img = base64.decodestring(img)
+
+    try:
+        fd = open('static/uploads/test.png', 'wb')
+        fd.write(decode_img)
+        fd.close()
+        return render_template('upload.html', entries=[], filename='/uploads/g1.png')
+    except:
+        return render_template('index.html', entries=[dict(error='invalid image type.')])
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
@@ -42,6 +67,10 @@ def upload_file():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             idset = type_classification.getNeighbor('static/uploads/'+filename)
             # for debug
+<<<<<<< HEAD
+=======
+            # idset = range(1, 11)
+>>>>>>> 0e3ed68642cf7741d0738ede77fed69fc9c0d6bc
             db = get_db()
             result = []
             nameSet = set()
@@ -56,7 +85,7 @@ def upload_file():
                     break
             entries = [dict(name=row[0], gender=row[1], type=row[2], source=row[3], path=row[4].replace("/Users/tj474474/Development/visual_database/amazon", "")) for row in result]
             return render_template('upload.html', entries=entries, filename=filename)
-    return render_template('index.html', entries=[dict(error='invalid image type.')])
+    return render_template('index.html', entries=[dict(error='invalid image type.')]) 
 
 @app.route('/chooseType', methods=['POST'])
 def chooseType():
