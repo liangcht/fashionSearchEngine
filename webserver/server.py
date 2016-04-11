@@ -1,11 +1,8 @@
 import sqlite3
 import os
-<<<<<<< HEAD
-=======
 import base64
 import sys
 from binascii import a2b_base64
->>>>>>> 0e3ed68642cf7741d0738ede77fed69fc9c0d6bc
 import type_classification
 from flask import Flask, g, render_template, request, url_for, redirect
 from flask.ext.images import resized_img_src
@@ -67,10 +64,7 @@ def upload_file():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             idset = type_classification.getNeighbor('static/uploads/'+filename)
             # for debug
-<<<<<<< HEAD
-=======
             # idset = range(1, 11)
->>>>>>> 0e3ed68642cf7741d0738ede77fed69fc9c0d6bc
             db = get_db()
             result = []
             nameSet = set()
