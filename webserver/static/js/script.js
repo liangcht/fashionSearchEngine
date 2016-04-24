@@ -2,7 +2,7 @@ function imageHandler(e2)
 { 
   var myimage = 'myimage'
   var store = document.getElementById('imgstore');
-  store.innerHTML='<img width="300" src="' + e2.target.result +'" id="' + myimage + '"/>';
+  store.innerHTML='<img src="' + e2.target.result +'" id="' + myimage + '"/>';
   // var myimagesrc = document.getElementById('myimage').src;
 
   console.log (store);

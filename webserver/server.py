@@ -57,7 +57,6 @@ def upload_img():
 @app.route('/file_result', methods=['GET','POST'])
 def find_result():
     try:
-        print("in try")
         filename = request.form.get('name')
         # idset_querydata = type_classification.getNeighbor('static/uploads/'+filename)
         # for debug
@@ -96,7 +95,6 @@ def find_result():
         idset_querydata[1] = ((1,1), (1,1),(1,1),(1,1),(1,1))
 
         entries = [dict(name=row[0], gender=row[1], type=row[2], source=row[3], path=row[4].replace("/Users/tj474474/Development/visual_database/amazon", "")) for row in result]
-        print("rendering")
         return render_template('upload.html', entries=entries, filename=filename, pic_data=pic_data, querydata=idset_querydata[1])
     except:
         print("error when rendering result")
