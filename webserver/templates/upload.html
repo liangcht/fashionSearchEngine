@@ -25,7 +25,7 @@
           <div class="span-13">
           {% set count = 1 %}
           {% for entry in entries[:10] %}
-            <div class="tab" id="tab{{count}}"><a href={{entry.source}} target="_blank" title="Click to view next image"><img src={{entry.path}} alt="" /></a>
+            <div class="tab" id="tab{{count}}"><a href={{entry.source}} target="_blank" title="Click to buy it!"><img src={{entry.path}} alt="" /></a>
             <p class="info"> <strong>{{entry.name}}</strong>Type: {{entry.type}}, Gender: {{entry.gender}}</p>
             <p class="info" text-align="left"><strong>Score: </strong>
             {% for score in pic_data[count-1] %}
@@ -49,26 +49,6 @@
             {% endfor %}
           </ul>
         </div>
-        <!--
-        <div class="span-5">
-          <ul id="tab-container-1-nav">
-            {% set count = 1 %}
-            {% for datas in pic_data[:10] %}
-            <strong>Scores</strong>
-            <div class="tab" id="tab{{count}}">
-              {% for data in datas %}
-              <p>
-                {{data[0]}} : {{data[1]}}
-              </p>
-            </div>
-              {% endfor %}
-            {% set count = count + 1 %}
-            {% else %}
-            <li><em>Unbelievable.  No entries here so far</em>
-            {% endfor %}
-          </ul>
-        </div>
-        -->
   		</div>
     </div>
     <div class="container footer">
