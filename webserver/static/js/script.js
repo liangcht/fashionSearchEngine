@@ -2,7 +2,7 @@ function imageHandler(e2)
 { 
   var myimage = 'myimage'
   var store = document.getElementById('imgstore');
-  store.innerHTML='<img src="' + e2.target.result +'" id="' + myimage + '"/>';
+  store.innerHTML='<img width="300" src="' + e2.target.result +'" id="' + myimage + '"/>';
   // var myimagesrc = document.getElementById('myimage').src;
 
   console.log (store);
@@ -60,6 +60,8 @@ function crop_image()
   ctx.drawImage(origimg, $('#x').val(), $('#y').val(), $('#w').val(), $('#h').val(), 0,0,$('#w').val(),$('#h').val());
 
   var saveImg = drawimg.toDataURL("image/png");
+  document.getElementById('mycanvas').src = saveImg;
+  console.log(saveImg.data);
 
   //var newimg = new Image();
   //newimg.src = drawimg.toDataURL("image/png");
