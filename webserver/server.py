@@ -57,7 +57,7 @@ def upload_img():
 @app.route('/file_result', methods=['GET','POST'])
 def find_result():
     try:
-        filename = request.form.get('name')
+        filename = "test.jpg"
         # idset_querydata = type_classification.getNeighbor('static/uploads/'+filename)
         # for debug
         idset_querydata = range(2)

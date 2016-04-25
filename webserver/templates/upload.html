@@ -11,6 +11,10 @@
     <div class="container header">
       <h1>Similar outfits</h1>
       <h3>These are similiar outfits found online</h3>
+      <form action="/">
+        <input type="submit" value="Return" 
+         name="Return" id="return" />
+      </form>
     </div>
     <div class="container content">
     	<div id="tab-container-1">
@@ -18,7 +22,7 @@
           <script>
           function refresh(node)
           {
-             var times = 10; // gap in Milli Seconds;
+             var times = 5; // gap in Milli Seconds;
 
              (function startRefresh()
              {
@@ -28,7 +32,6 @@
                 else 
                   address = node.src;
                   node.src = address+"?time="+new Date().getTime();
-                  console.log(node.src);
 
                 setTimeout(startRefresh,times);
              })();
