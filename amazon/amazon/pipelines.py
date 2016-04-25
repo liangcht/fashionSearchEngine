@@ -14,7 +14,7 @@ class AmazonPipeline(object):
 		self.createTables()
 
 	def setupDBCon(self):
-		self.con = sqlite3.connect('./test.db') #Change this to your own directory
+		self.con = sqlite3.connect('./test_large.db') #Change this to your own directory
 		self.cur = self.con.cursor()
 
 	def createTables(self):
