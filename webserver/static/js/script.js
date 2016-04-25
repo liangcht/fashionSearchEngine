@@ -59,7 +59,7 @@ function crop_image()
   drawimg.height = $('#h').val();
   ctx.drawImage(origimg, $('#x').val(), $('#y').val(), $('#w').val(), $('#h').val(), 0,0,$('#w').val(),$('#h').val());
 
-  var saveImg = drawimg.toDataURL("image/png");
+  var saveImg = drawimg.toDataURL("image/jpeg");
 
   //var newimg = new Image();
   //newimg.src = drawimg.toDataURL("image/png");
@@ -70,10 +70,10 @@ function crop_image()
     data: {'img': saveImg},
     type: 'POST',
     success: function(response) {
-      console.log(response);
+      console.log("success");
     },
     error: function(error) {
-      console.log(error);
+      console.log("error");
     }
   });
 

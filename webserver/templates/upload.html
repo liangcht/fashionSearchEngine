@@ -11,11 +11,41 @@
     <div class="container header">
       <h1>Similar outfits</h1>
       <h3>These are similiar outfits found online</h3>
+      <form action="/">
+        <input type="submit" value="Return" 
+         name="Return" id="return" />
+      </form>
     </div>
     <div class="container content">
     	<div id="tab-container-1">
         <div class="span-5">
-            <img src="/uploads/{{filename}}" width="210" alt="" />
+          <script>
+          function refresh(node)
+          {
+             var times = 5; // gap in Milli Seconds;
+
+             (function startRefresh()
+             {
+                var address;
+                if(node.src.indexOf('?')>-1)
+                  address = node.src.split('?')[0];
+                else 
+                  address = node.src;
+                  node.src = address+"?time="+new Date().getTime();
+
+                setTimeout(startRefresh,times);
+             })();
+
+          }
+
+          window.onload = function()
+          {
+            var node = document.getElementById('img');
+            refresh(node);
+            // you can refresh as many images you want just repeat above steps
+          }
+          </script>
+            <img id="img" src="/uploads/{{filename}}" width="210" alt="" />
             <p class="info"><strong>Score:</strong>
               {% for score in querydata %}
                 {{score[0]}}: {{score[1]}} <br>
@@ -25,7 +55,7 @@
           <div class="span-13">
           {% set count = 1 %}
           {% for entry in entries[:10] %}
-            <div class="tab" id="tab{{count}}"><a href={{entry.source}} target="_blank" title="Click to view next image"><img src={{entry.path}} alt="" /></a>
+            <div class="tab" id="tab{{count}}"><a href={{entry.source}} target="_blank" title="Click to buy it!"><img src={{entry.path}} alt="" /></a>
             <p class="info"> <strong>{{entry.name}}</strong>Type: {{entry.type}}, Gender: {{entry.gender}}</p>
             <p class="info" text-align="left"><strong>Score: </strong>
             {% for score in pic_data[count-1] %}
@@ -49,26 +79,6 @@
             {% endfor %}
           </ul>
         </div>
-        <!--
-        <div class="span-5">
-          <ul id="tab-container-1-nav">
-            {% set count = 1 %}
-            {% for datas in pic_data[:10] %}
-            <strong>Scores</strong>
-            <div class="tab" id="tab{{count}}">
-              {% for data in datas %}
-              <p>
-                {{data[0]}} : {{data[1]}}
-              </p>
-            </div>
-              {% endfor %}
-            {% set count = count + 1 %}
-            {% else %}
-            <li><em>Unbelievable.  No entries here so far</em>
-            {% endfor %}
-          </ul>
-        </div>
-        -->
   		</div>
     </div>
     <div class="container footer">

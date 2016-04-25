@@ -20,42 +20,34 @@
     <div class="container content">
       <p>you can...</p>
       <div id="tab-container-1">
-        <!--
-        <div class="span-8">
-      <h2>Choose a type</h2>
-      <form action="/chooseType" method="post">
-        <input type="radio" name="type" value="T-Shirt">T-Shirt
-        <input type="radio" name="type" value="Dress">Dress
-        <input type="radio" name="type" value="Wool Jacket">Wool Jacket
-        <input type="radio" name="type" value="Buttom-Down Shirt">Buttom-Down Shirt
-        <input type="submit" value="Submit">
-      </form>
-    </div>
-  -->
-    <div>
-    <fieldset>
-      <legend><h2>Upload an image</h2></legend>
-      <form action="/upload" method="post" enctype=multipart/form-data>
-    <input type="file" id="getimage" name="file"/>
-    <div id="imgstore"></div>
-    <input type="button" value="Crop Image" class="btn btn-large btn-inverse" onclick="crop_image()" />
-    <input type="submit" value="Upload">
-    </form>
 
+    <div>
+    <input type="file" id="getimage" />
+    <fieldset>
+      <legend>Your image here</legend>
+      <div id="imgstore"></div>
     </fieldset>
-    <!--
     <fieldset id="save">
       <legend>Crop image here</legend>
       <canvas id="mycanvas"></canvas>
     </fieldset>
-    -->
-    </div>
-    <div class="span-5">
+    
 
+    <form id="updatecrop">
+      <input type="hidden" id="x" name="x" />
+      <input type="hidden" id="y" name="y" />
+      <input type="hidden" id="w" name="w" />
+      <input type="hidden" id="h" name="h" />
+      <input type="button" value="Crop Image" class="btn btn-large btn-inverse" onclick="crop_image()" />
+    </form>
+    <form action="/file_result" method="post">
+      <input type = "hidden"name="name" value="test.jpg">
+      <input type="submit" value="submit">
+    </form>
     </div>
-    </fieldset>
-    </div>
-    </div>
+  </div>
+</div>
+
     <div class="container footer">
       <p class="credit">We are: mc chu, lc tsai, jz zhou</p>
       <p>This is a prototype.</p>
