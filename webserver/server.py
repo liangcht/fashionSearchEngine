@@ -4,7 +4,7 @@ import base64
 import sys
 import numpy as np
 from binascii import a2b_base64
-# import type_classification
+import type_classification
 from flask import Flask, g, render_template, request, url_for, redirect
 from flask.ext.images import resized_img_src
 from werkzeug import secure_filename
@@ -58,13 +58,16 @@ def upload_img():
 def find_result():
     try:
         filename = "test.jpg"
-        # idset_querydata = type_classification.getNeighbor('static/uploads/'+filename)
+        idset_querydata = type_classification.getNeighbor('static/uploads/'+filename)
+
         # for debug
-        idset_querydata = range(2)
-        idset_querydata[0] = range(1, 11)
+        #####
+        #idset_querydata = range(2)
+        #idset_querydata[0] = range(1, 11)
+        #####
         db = get_db()
         result = []
-        nameSet = set()
+        nameSet = set() # get unique image results
         for _id_ in idset_querydata[0]:
             rst = db.execute(
                 'SELECT name, gender, type, source, path FROM amazon WHERE id = ?', (_id_, )
@@ -92,7 +95,9 @@ def find_result():
                 col_score.append(( top_col[c], cnn_ft[_index_][c] )) 
             pic_data.append(col_score)
 
-        idset_querydata[1] = ((1,1), (1,1),(1,1),(1,1),(1,1))
+        ### debug
+        #idset_querydata[1] = ((1,1), (1,1),(1,1),(1,1),(1,1))
+        ###
 
         entries = [dict(name=row[0], gender=row[1], type=row[2], source=row[3], path=row[4].replace("/Users/tj474474/Development/visual_database/amazon", "")) for row in result]
         return render_template('upload.html', entries=entries, filename=filename, pic_data=pic_data, querydata=idset_querydata[1])
@@ -100,6 +105,7 @@ def find_result():
         print("error when rendering result")
         return render_template('index.html', entries=[dict(error='invalid image type.')])
 
+"""
 # upload image without crop
 @app.route('/upload', methods=['GET','POST'])
 def upload_file():
@@ -147,6 +153,7 @@ def upload_file():
             entries = [dict(name=row[0], gender=row[1], type=row[2], source=row[3], path=row[4].replace("/Users/tj474474/Development/visual_database/amazon", "")) for row in result]
             return render_template('upload.html', entries=entries, filename=filename, pic_data=pic_data, querydata=idset_querydata[1])
     return render_template('index.html', entries=[dict(error='invalid image type.')]) 
+"""
 
 @app.route('/chooseType', methods=['POST'])
 def chooseType():
