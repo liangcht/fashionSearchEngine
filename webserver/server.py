@@ -138,7 +138,7 @@ def upload_file():
             cnn_ft = np.transpose(np.transpose(cnn_ft) / cnn_ft.sum(axis=1))
             
             top_ctg = open("top_categories.txt")
-            top_col = [i.split(',')[1].strip()[10:] for i in top_ctg]
+            top_col = np.array([i[6:].strip()[10:] for i in top_ctg])
             pic_data = []
             for _index_ in idset_querydata[0]:
                 _index_ -= 1

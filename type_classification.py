@@ -101,13 +101,11 @@ def getNeighbor(query_path=""):
 	cnn_ft = cnn_ft[:, top_index]
 
 	np.save(open("dist.npy", 'wb'), dist)
-<<<<<<< HEAD
-	return list(dist.argsort()[:10])
-=======
+
 	return list(dist.argsort()[:10] + 1)
->>>>>>> 92037d613f098b9d030a2c97a31a7bca898cd43b
+
 
 if __name__ == '__main__':
 
-	getMatrix()
-	#print getNeighbor("/Users/tj474474/Development/visual_database/amazon/crawlImages/16449.jpg")
+	#getMatrix()
+	print getNeighbor("/Users/tj474474/Development/visual_database/amazon/crawlImages/16449.jpg")
