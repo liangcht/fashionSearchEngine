@@ -8,7 +8,7 @@ os.environ['GLOG_minloglevel'] = '3'
 import caffe
 
 ######### Initialize caffe model ##########
-caffe_root = '/Users/tj474474/Development/caffe/'  
+caffe_root = '/Users/mcchu/dev/caffe/'  
 caffe.set_mode_cpu()
 
 model_def = caffe_root + 'models/bvlc_reference_caffenet/deploy.prototxt'
@@ -56,7 +56,7 @@ def getMatrix():
 	for index, path in enumerate(d["path"].values):
 		print index
 		# download an image
-		my_image_url = "/Users/tj474474/Development/visual_database/cropImageNoResize/" #path  # paste your URL here
+		my_image_url = "../cropImageNoResize/" #path  # paste your URL here
 
 		# transform it and copy it into the net
 		image = caffe.io.load_image(my_image_url + "crop" + str(index + 1) + ".jpg")
@@ -103,11 +103,11 @@ def getNeighbor(query_path=""):
 	query_ft = query_ft / query_ft.sum()
 	dist = np.apply_along_axis(getDist, 1, cnn_ft, query_ft)
 
-	#return tuple(list(dist.argsort()[:10] + 1), list(dist.sort()[:10]))
+	#return tuple(list(dist.argsort()[:20] + 1), list(dist.sort()[:10]))
 	return list(dist.argsort()[:20] + 1)
 
 
 if __name__ == '__main__':
 
 	#getMatrix()
-	print getNeighbor("/Users/tj474474/Development/visual_database/amazon/crawlImages/16449.jpg")
+	print getNeighbor("../amazon/crawlImages/16449.jpg")
