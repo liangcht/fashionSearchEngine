@@ -1,11 +1,23 @@
+var scale;
+
 function imageHandler(e2) 
 { 
+
   var myimage = 'myimage'
   var store = document.getElementById('imgstore');
-  store.innerHTML='<img width="300" src="' + e2.target.result +'" id="' + myimage + '"/>';
+  var img = document.createElement('img');
+  img.src = e2.target.result;
+  img.id = myimage;
+
+  console.log("2: " + img.width);
+  var new_imgwidth = 300;
+  scale = img.width / new_imgwidth;
+
+  img.width = 300;
+  store.innerHTML='<img width=' + img.width + ' src="' + e2.target.result +'" id="' + myimage + '"/>';
   // var myimagesrc = document.getElementById('myimage').src;
 
-  console.log (store);
+  console.log(store);
   // console.log(myimagesrc);
   // window.open(myimagesrc);
 
@@ -23,7 +35,7 @@ function loadimage(e1)
 {
   var filename = e1.target.files[0]; 
   var fr = new FileReader();
-  fr.onload = imageHandler;  
+  fr.onload = imageHandler;
   fr.readAsDataURL(filename); 
 }
 
@@ -55,15 +67,11 @@ function crop_image()
   var drawimg = document.getElementById("mycanvas");
   var ctx = drawimg.getContext("2d");
   var origimg = document.getElementById("myimage");
-  drawimg.width = $('#w').val();
-  drawimg.height = $('#h').val();
-  ctx.drawImage(origimg, $('#x').val(), $('#y').val(), $('#w').val(), $('#h').val(), 0,0,$('#w').val(),$('#h').val());
-
+  drawimg.width = $('#w').val()*scale;
+  drawimg.height = $('#h').val()*scale;
+  ctx.drawImage(origimg, $('#x').val()*scale, $('#y').val()*scale, $('#w').val()*scale, $('#h').val()*scale, 0,0,drawimg.width,drawimg.height);
+  
   var saveImg = drawimg.toDataURL("image/jpeg");
-
-  //var newimg = new Image();
-  //newimg.src = drawimg.toDataURL("image/png");
-  //$('#save').append(newimg);
 
   $.ajax({
     url: '/upload_img',
@@ -78,16 +86,3 @@ function crop_image()
   });
 
 }
-
-// function download() 
-// {
-//   var dt = document.getElementById("mycanvas").toDataURL('image/jpeg');
-//   console.log(dt);
-//   this.href = dt;
-// }
-// var el = document.getElementById('saveJpg');
-// if(el)
-// {
-//   el.addEventListener('click', download, false);
-// }
-
