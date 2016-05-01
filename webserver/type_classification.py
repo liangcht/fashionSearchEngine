@@ -9,10 +9,14 @@ import caffe
 
 ######### Initialize caffe model ##########
 caffe_root = '/Users/tj474474/Development/caffe/'  
-caffe.set_mode_cpu()
+#caffe.set_mode_cpu()
+caffe.set_device(0)  # if we have multiple GPUs, pick the first one
+caffe.set_mode_gpu()
 
-model_def = caffe_root + 'models/bvlc_reference_caffenet/deploy.prototxt'
-model_weights = caffe_root + 'models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel'
+#model_def = caffe_root + 'models/bvlc_reference_caffenet/deploy.prototxt'
+#model_weights = caffe_root + 'models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel'
+model_def = caffe_root + 'models/bvlc_googlenet/deploy.prototxt'
+model_weights = caffe_root + 'models/bvlc_googlenet/bvlc_googlenet.caffemodel'
 
 net = caffe.Net(model_def,      # defines the structure of the model
                 model_weights,  # contains the trained weights
@@ -32,9 +36,9 @@ transformer.set_channel_swap('data', (2,1,0))  # swap channels from RGB to BGR
 
 # set the size of the input (we can skip this if we're happy
 #  with the default; we can also change it later, e.g., for different batch sizes)
-net.blobs['data'].reshape(1,        # batch size
-                          3,         # 3-channel (BGR) images
-                      227, 227)  # image size is 227x227
+#net.blobs['data'].reshape(1,        # batch size
+ #                         3,         # 3-channel (BGR) images
+  #                    227, 227)  # image size is 227x227
 
 
 def getDist(target, query):
@@ -44,7 +48,8 @@ def getMatrix():
 	pass
 	####### Get vector of whole database ############
 	# Loading Database
-	engine = create_engine('sqlite:///amazon/test.db')
+	#engine = create_engine('sqlite:///amazon/test.db')
+	engine = create_engine('sqlite:///../amazon/test_large_no_noise.db')
 	d = pd.read_sql_table('Amazon', engine)
 
 	# sample_d = d[d["type"].isin(["T-Shirt", "Wool Jacket", "Buttom-Down Shirt", "Dress"])]
@@ -56,10 +61,10 @@ def getMatrix():
 	for index, path in enumerate(d["path"].values):
 		print index
 		# download an image
-		my_image_url = "/Users/tj474474/Development/visual_database/cropImageNoResize/" #path  # paste your URL here
+		my_image_url = "/Users/tj474474/Development/visual_database/cropImage_large/" #path  # paste your URL here
 
 		# transform it and copy it into the net
-		image = caffe.io.load_image(my_image_url + "crop" + str(index + 1) + ".jpg")
+		image = caffe.io.load_image(my_image_url + "crop" + path)
 		net.blobs['data'].data[...] = transformer.preprocess('data', image)
 
 		# perform classification
@@ -80,7 +85,7 @@ def getMatrix():
 		#print 'probabilities and labels:'
 		#print zip(output_prob[top_inds], labels[top_inds])
 
-	np.save(open("crop_cnn_prob.npy", 'wb'), cnn_ft)
+	np.save(open("crop_cnn_prob_large_google.npy", 'wb'), cnn_ft)
 
 def getNeighbor(query_path=""):
 
@@ -110,5 +115,5 @@ def getNeighbor(query_path=""):
 
 if __name__ == '__main__':
 
-	#getMatrix()
-	print getNeighbor("/Users/tj474474/Development/visual_database/amazon/crawlImages/16449.jpg")
+	getMatrix()
+	#print getNeighbor("/Users/tj474474/Development/visual_database/amazon/crawlImages/16449.jpg")
