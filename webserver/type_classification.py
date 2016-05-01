@@ -98,7 +98,7 @@ def getNeighbor(query_path=""):
 	net.forward()
 	query_ft = net.blobs['prob'].data[0]
 
-	cnn_ft = np.load("crop_cnn_prob.npy")
+	cnn_ft = np.load("cnn_prob_large_google.npy")
 	
 	top_ctg = open("top_categories.txt")
 	top_index = [int(i.split(',')[0]) for i in top_ctg]
@@ -110,7 +110,7 @@ def getNeighbor(query_path=""):
 	query_ft = query_ft / query_ft.sum()
 	dist = np.apply_along_axis(getDist, 1, cnn_ft, query_ft)
 
-	return (list(dist.argsort()[:20] + 1), zip(top_col[query_ft.argsort()[::-1][:5]], np.sort(query_ft)[::-1][:5]))
+	return (list(dist.argsort()[:20]), zip(top_col[query_ft.argsort()[::-1][:5]], np.sort(query_ft)[::-1][:5]))
 	#return list(dist.argsort()[:20] + 1)
 
 if __name__ == '__main__':

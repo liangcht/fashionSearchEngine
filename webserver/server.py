@@ -11,7 +11,7 @@ from werkzeug import secure_filename
 from werkzeug.datastructures import FileStorage
 from sets import Set
 
-SQLITE_DB_PATH = '../amazon/test.db'
+SQLITE_DB_PATH = '../amazon/test_large_no_noise.db'
 # SQLITE_DB_SCHEMA = '../amazon/try_db.sql'
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = set(['pdf', 'png', 'jpg', 'jpeg'])
@@ -76,7 +76,7 @@ def find_result():
             if len(result) >= 10:
                 break
         
-        cnn_ft = np.load("crop_cnn_prob.npy")
+        cnn_ft = np.load("cnn_prob_large_google.npy")
         top_ctg = open("top_categories.txt")
         top_index = [int(i.split(',')[0]) for i in top_ctg]
         cnn_ft = cnn_ft[:, top_index] 
@@ -86,7 +86,7 @@ def find_result():
         top_col = [i.split(',')[1].strip()[10:] for i in top_ctg]
         pic_data = []
         for _index_ in idset_querydata[0]:
-            _index_ -= 1
+            #_index_ -= 1
             col = cnn_ft[_index_].argsort()[::-1][:5]
             col_score = []
             for c in col:
@@ -97,7 +97,7 @@ def find_result():
         #idset_querydata[1] = ((1,1), (1,1),(1,1),(1,1),(1,1))
         ###
 
-        entries = [dict(name=row[0], gender=row[1], type=row[2], source=row[3], path=row[4].replace("/Users/tj474474/Development/visual_database/amazon", "")) for row in result]
+        entries = [dict(name=row[0], gender=row[1], type=row[2], source=row[3], path="/largeImageNoNoise/" + row[4]) for row in result]
         return render_template('upload.html', entries=entries, filename=filename, pic_data=pic_data, querydata=idset_querydata[1])
     except:
         print("error when rendering result")
