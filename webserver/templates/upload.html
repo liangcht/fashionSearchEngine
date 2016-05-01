@@ -16,31 +16,25 @@
     <div class="container content">
     	<div id="tab-container-1">
         <div class="span-5">
-          <!-- reload the image from file path -->
+          <!-- refresh the image onload -->
           <script>
           function refresh(node)
           {
-             var times = 100; // gap in Milli Seconds;
-             (function startRefresh()
-             {
-                var address;
-                if(node.src.indexOf('?')>-1)
-                  address = node.src.split('?')[0];
-                else 
-                  address = node.src;
-                  node.src = address+"?time="+new Date().getTime();
-                setTimeout(startRefresh,times);
-             })();
+            var address;
+            if(node.src.indexOf('?')>-1)
+              address = node.src.split('?')[0];
+            else 
+              address = node.src;
+              node.src = address+"?time="+new Date().getTime();
           }
-          // refresh onload
           window.onload = function()
           {
-            var node = document.getElementById('img');
+            var node = document.getElementById('stored_qimg');
             refresh(node);
           }
           </script>
-          <!--  -->
-            <img id="img" src="/uploads/{{filename}}" width="210" alt="" />
+
+            <img id="stored_qimg" src="/uploads/{{filename}}" width="210" alt="" />
             <p class="info"><strong>Score:</strong>
               {% for score in querydata %}
                 {{score[0]}}: {{score[1]}} <br>
@@ -80,6 +74,7 @@
       <p class="credit">We are: mc chu, lc tsai, jz zhou</p>
       <p>This is a prototype.</p>
     </div>
+    <!-- gallery effect -->
     <script type="text/javascript">
       var tabber1 = new Yetii({
       id: 'tab-container-1'

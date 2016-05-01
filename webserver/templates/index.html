@@ -3,14 +3,9 @@
     <meta name="viewport" content="width=device-width">
     <title>Fashion search engine</title>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <link rel="stylesheet" type="text/css" href="css/jquery.Jcrop.css" />
     <link href="css/master.css" rel="stylesheet" type="text/css" media="screen" />
     <link href="css/screen.css" rel="stylesheet" type="text/css" media="screen" />
-    <script type="text/javascript" src="js/yetii-min.js"></script>
-    <!-- input image crop -->
-    <script type="text/javascript" src="js/script.js"></script>
-    <script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
-    <script type="text/javascript" src="js/jquery.Jcrop.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/jquery.Jcrop.css" />
   </head>
   <body>
     <div class="container header">
@@ -24,13 +19,12 @@
     <div>
     <input type="file" id="getimage" />
     <fieldset>
-      <legend>Your image here</legend>
+      <legend>Your image</legend>
       <div id="imgstore"></div>
     </fieldset>
-    <fieldset id="save">
-      <legend>Crop image here</legend>
-      <canvas id="mycanvas"></canvas>
-    </fieldset>
+    <fieldset hidden>
+      <canvas id="mycanvas" hidden></canvas>
+    </fieldset hidden>
     
 
     <form id="updatecrop">
@@ -41,8 +35,8 @@
       <input type="button" value="Crop Image" class="btn btn-large btn-inverse" onclick="crop_image()" />
     </form>
     <form action="/file_result" method="post">
-      <input type = "hidden"name="name" value="test.jpg">
-      <input type="submit" value="submit">
+      <input type = "hidden" name="name" value="test.jpg">
+      <input type="submit" value="Find it now!">
     </form>
     </div>
   </div>
@@ -52,10 +46,10 @@
       <p class="credit">We are: mc chu, lc tsai, jz zhou</p>
       <p>This is a prototype.</p>
     </div>
-    <script type="text/javascript">
-      var tabber1 = new Yetii({
-      id: 'tab-container-1'
-      });
-    </script>
+    <!-- input image crop -->
+    <script type="text/javascript" src="js/script.js"></script>
+    <script type="text/javascript" src="js/yetii-min.js"></script>
+    <script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery.Jcrop.min.js"></script> 
   </body>
 </html>

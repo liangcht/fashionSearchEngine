@@ -9,9 +9,9 @@ import caffe
 
 ######### Initialize caffe model ##########
 caffe_root = '/Users/tj474474/Development/caffe/'  
-#caffe.set_mode_cpu()
-caffe.set_device(0)  # if we have multiple GPUs, pick the first one
-caffe.set_mode_gpu()
+caffe.set_mode_cpu()
+#caffe.set_device(0)  # if we have multiple GPUs, pick the first one
+#caffe.set_mode_gpu()
 
 #model_def = caffe_root + 'models/bvlc_reference_caffenet/deploy.prototxt'
 #model_weights = caffe_root + 'models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel'
