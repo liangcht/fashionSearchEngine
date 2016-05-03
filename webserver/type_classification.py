@@ -93,7 +93,7 @@ def getNeighbor(query_path=""):
 	net.forward()
 	query_ft = net.blobs['prob'].data[0]
 
-	cnn_ft = np.load("crop_cnn_prob.npy")
+	cnn_ft = np.load("cnn_prob.npy")
 	
 	top_ctg = open("top_categories.txt")
 	top_index = [int(i.split(',')[0]) for i in top_ctg]

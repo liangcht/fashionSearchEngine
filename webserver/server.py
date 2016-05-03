@@ -76,12 +76,14 @@ def find_result():
             if len(result) >= 10:
                 break
         
+        # fetch query image scores
         cnn_ft = np.load("crop_cnn_prob.npy")
         top_ctg = open("top_categories.txt")
         top_index = [int(i.split(',')[0]) for i in top_ctg]
         cnn_ft = cnn_ft[:, top_index] 
         cnn_ft = np.transpose(np.transpose(cnn_ft) / cnn_ft.sum(axis=1))
         
+        # find top 10 unique results
         top_ctg = open("top_categories.txt")
         top_col = [i.split(',')[1].strip()[10:] for i in top_ctg]
         pic_data = []
