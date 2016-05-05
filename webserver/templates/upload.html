@@ -7,6 +7,12 @@
     <link href="css/master.css" rel="stylesheet" type="text/css" media="screen" />
     <link href="css/screen.css" rel="stylesheet" type="text/css" media="screen" />
     <script type="text/javascript" src="js/yetii-min.js"></script>
+    <script type="text/javascript" src="js/result.js"></script>
+    <!-- slider -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <link rel="stylesheet" href="/resources/demos/style.css">
   </head>
   <body>
     <div class="container header">
@@ -14,35 +20,48 @@
       <h3>These are similiar outfits found online</h3>
       <a href="/" type="button">Return</a>
     </div>
+
     <div class="container content">
-      <div>
-        <form action="/file_result" method="post">
-          <input type="hidden" name="factor" value="1">
-          <input type="hidden" name="name" value="test.jpg">
-          <input type="submit" value="Find it now!">
-        </form>
+      <div id="slider">
+        <script>
+          $(function() {
+          $( "#slider-range-max" ).slider({
+            range: "max",
+            min: 0,
+            max: 10,
+            value: 5,
+            slide: function( event, ui ) {
+              $( "#amount" ).val( ui.value );
+              $.ajax({
+                url: '/file_result',
+                data: {'factor': ui.value,
+                      'name': 'test.jpg',
+                      'mode': 1
+                },
+                type: 'POST',
+                success: function(data) {
+                  // data = $.parseJSON(rawData);
+                  console.log("success");
+                  // console.log(data['name']);
+                  $( "#result" ).html(data);
+                },
+                error: function(error) {
+                  console.log("error");
+                }
+              });
+            }
+          });
+          $( "#amount" ).val( $( "#slider-range-max" ).slider( "value" ) );
+          });
+        </script>
+          <p>
+          <label for="amount">factor:</label>
+          <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+          </p>
+          <div style="width:500;"><div id="slider-range-max"></div></div>
       </div>
     	<div id="tab-container-1">
         <div class="span-5">
-          <!-- refresh the image onload -->
-          <script>
-          function refresh(node)
-          {
-            var address;
-            if(node.src.indexOf('?')>-1){
-              address = node.src.split('?')[0];
-            }
-            else {
-              address = node.src;
-              node.src = address+"?time="+new Date().getTime();
-            }
-          }
-          window.onload = function()
-          {
-            var node = document.getElementById('stored_qimg');
-            refresh(node);
-          }
-          </script>
             <img id="stored_qimg" src="/uploads/{{filename}}" width="210" alt="" />
             <p class="info"><strong>Score:</strong>
               {% for score in querydata %}
@@ -50,6 +69,7 @@
               {% endfor %}
             </p>
         </div>
+
           <div class="span-13">
           {% set count = 1 %}
           {% for entry in entries[:10] %}
@@ -78,6 +98,7 @@
           </ul>
         </div>
   		</div>
+    </div>
     </div>
     <div class="container footer">
       <p class="credit">We are: mc chu, lc tsai, jz zhou</p>

@@ -85,4 +85,24 @@ function crop_image()
     }
   });
 
+  $.ajax({
+      url: '/file_result',
+      data: {'factor': 5, // color/type factor default: 0.5
+            'name': 'test.jpg',
+            'mode': 0
+      },
+      type: 'POST',
+      success: function(data) {
+        // data = $.parseJSON(rawData);
+        console.log("success");
+        // console.log(data['name']);
+        document.open();
+        document.write(data);
+        document.close();
+      },
+        error: function(error) {
+          console.log("error");
+        }
+  });
+
 }
