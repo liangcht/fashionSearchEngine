@@ -6,7 +6,6 @@ except ImportError:
     import Image
 # from matplotlib import pyplot as plt
 import numpy as np
-import math
 import csv
 
 def store_as_csv (directory=""):
@@ -125,7 +124,7 @@ def colDistance (bins, query_path):
 
 	return (list(dist.argsort()[:20]+1))
 
-def getDistance(factor, bins, query_path):
+def get_combined_result(factor, bins, query_path):
 	### CNN distance.
 	image = caffe.io.load_image(query_path)
 	net.blobs['data'].data[...] = transformer.preprocess('data', image)
