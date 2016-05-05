@@ -33,7 +33,7 @@
             slide: function( event, ui ) {
               $( "#amount" ).val( ui.value );
               $.ajax({
-                url: '/file_result',
+                url: '/refresh',
                 data: {'factor': ui.value,
                       'name': 'test.jpg',
                       'mode': 1
@@ -69,7 +69,7 @@
               {% endfor %}
             </p>
         </div>
-
+        <div id="result">
           <div class="span-13">
           {% set count = 1 %}
           {% for entry in entries[:10] %}
@@ -98,6 +98,7 @@
           </ul>
         </div>
   		</div>
+    </div>
     </div>
     </div>
     <div class="container footer">
