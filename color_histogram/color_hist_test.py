@@ -4,7 +4,7 @@ try:
     from PIL import Image, ImageDraw
 except ImportError:
     import Image
-from matplotlib import pyplot as plt
+# from matplotlib import pyplot as plt
 import numpy as np
 import math
 import csv
@@ -112,17 +112,60 @@ def color_hist (bins, img):
 def getDist(target, query):
 	return np.linalg.norm(query - target)
 
-def Distance (bins, query_path=""):
+def colDistance (bins, query_path):
 	"get the distance for each image in database"
 	query_ht = color_hist(bins, query_path)
 	query_array = np.array(query_ht)
 
 	# open the matrix for color histogram
-	hist = np.load("color_hist.npy")
+	hist = np.load("color_hist(no crop).npy")
 
 	dist = np.apply_along_axis(getDist, 1, hist, query_array)
+	# print dist
 
-	return list(dist.argsort()[:20]+1)
+	return (list(dist.argsort()[:20]+1))
+
+def getDistance(factor, bins, query_path):
+	### CNN distance.
+	image = caffe.io.load_image(query_path)
+	net.blobs['data'].data[...] = transformer.preprocess('data', image)
+
+	# perform classification
+	net.forward()
+	query_ft = net.blobs['prob'].data[0]
+
+	cnn_ft = np.load("cnn_prob_large_google.npy")
+	
+	top_ctg = open("top_categories.txt")
+	top_index = [int(i.split(',')[0]) for i in top_ctg]
+	top_ctg = open("top_categories.txt")
+	top_col = np.array([i[6:].strip()[10:] for i in top_ctg])
+	cnn_ft = cnn_ft[:, top_index] 
+	cnn_ft = np.transpose(np.transpose(cnn_ft) / cnn_ft.sum(axis=1))
+	query_ft = query_ft[top_index]
+	query_ft = query_ft / query_ft.sum()
+	cnn_dist = np.apply_along_axis(getDist, 1, cnn_ft, query_ft)
+
+	### color distance
+	query_ht = color_hist(bins, query_path)
+	query_array = np.array(query_ht)
+
+	# open the matrix for color histogram
+	color_hist = np.load("color_hist(no crop).npy")
+
+	color_dist = np.apply_along_axis(getDist, 1, color_hist, query_array)
+
+	result = np.zeros((color_dist.shape[0],1))
+	for i in range(color_dist.shape[0]):
+		result[i] = factor * cnn_dist[i] + (1-factor) * color_dist[i]
+
+	return (list(result.argsort()[:20]+1))
+
+
+
+query_path = "/Users/cyan/Desktop/color_hist_py/1.jpg"
+ind_list = colDistance(3, query_path)
+print ind_list
 
 
 
