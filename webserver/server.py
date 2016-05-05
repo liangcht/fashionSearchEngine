@@ -56,7 +56,7 @@ def upload_img():
 def find_result():
     try:
         filename = "test.jpg"
-        idset_querydata = type_classification.getNeighbor('static/uploads/'+filename)
+        idset_querydata = type_classification.getNeighbor_fine('static/uploads/'+filename)
 
         # for debug
         #####
@@ -76,28 +76,29 @@ def find_result():
             if len(result) >= 10:
                 break
         
-        cnn_ft = np.load("cnn_prob_large_google.npy")
-        top_ctg = open("top_categories.txt")
-        top_index = [int(i.split(',')[0]) for i in top_ctg]
-        cnn_ft = cnn_ft[:, top_index] 
-        cnn_ft = np.transpose(np.transpose(cnn_ft) / cnn_ft.sum(axis=1))
+        cnn_ft = np.load("cnn_prob_large_fine.npy")
+        top_ctg = open("category_label.txt").readlines()
+        #top_index = [int(i.split(',')[0]) for i in top_ctg]
+        #cnn_ft = cnn_ft[:, top_index] 
+        #cnn_ft = np.transpose(np.transpose(cnn_ft) / cnn_ft.sum(axis=1))
         
-        top_ctg = open("top_categories.txt")
-        top_col = [i.split(',')[1].strip()[10:] for i in top_ctg]
+        #top_ctg = open("top_categories.txt")
+        #top_col = [i.split(',')[1].strip()[10:] for i in top_ctg]
         pic_data = []
         for _index_ in idset_querydata[0]:
             #_index_ -= 1
             col = cnn_ft[_index_].argsort()[::-1][:5]
             col_score = []
             for c in col:
-                col_score.append(( top_col[c], cnn_ft[_index_][c] )) 
+                col_score.append(( top_ctg[c], cnn_ft[_index_][c] )) 
             pic_data.append(col_score)
+        print(pic_data)
 
         ### debug
         #idset_querydata[1] = ((1,1), (1,1),(1,1),(1,1),(1,1))
         ###
 
-        entries = [dict(name=row[0], gender=row[1], type=row[2], source=row[3], path="/largeImageNoNoise/" + row[4]) for row in result]
+        entries = [dict(name=row[0], gender=row[1], type=row[2], source=row[3], path="/crawlImages_large/" + row[4]) for row in result]
         return render_template('upload.html', entries=entries, filename=filename, pic_data=pic_data, querydata=idset_querydata[1])
     except:
         print("error when rendering result")
