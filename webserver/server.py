@@ -57,7 +57,7 @@ def find_result():
     try:
         factor = request.form['factor'] # get color/type weight
         filename = request.form['name']
-        idset_querydata = type_classification.getNeighbor_fine(0, 'static/uploads/'+filename)
+        idset_querydata = type_classification.getNeighbor_fine(0.5, 'static/uploads/'+filename)
 
         # for debug
         #####
@@ -68,14 +68,16 @@ def find_result():
 
         db = get_db()
         result = []
-        nameSet = set() # get unique image results
-        for _id_ in idset_querydata[0]:
+        scoreSet = set() # get unique image results
+        idset = set()
+        for index, _id_ in enumerate(idset_querydata[0]):
             rst = db.execute(
                 'SELECT name, gender, type, source, path FROM amazon WHERE id = ?', (_id_, )
             ).fetchone()
-            if rst[0] not in nameSet:
+            if idset_querydata[3][index] not in scoreSet:
                 result.append(rst)
-                nameSet.add(rst[0])
+                scoreSet.add(idset_querydata[3][index])
+                idset.add(_id_)
             if len(result) >= 10:
                 break
         
@@ -86,6 +88,8 @@ def find_result():
 
         pic_data = []
         for _index_ in idset_querydata[0]:
+            if _index_ not in idset:
+                continue
             #_index_ -= 1
             col = cnn_ft[_index_].argsort()[::-1][:5]
             col_score = []

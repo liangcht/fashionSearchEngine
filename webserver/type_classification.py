@@ -6,6 +6,7 @@ import sys
 import os
 os.environ['GLOG_minloglevel'] = '3' 
 import caffe
+import color_hist_test
 
 ######### Initialize caffe model ##########
 #caffe_root = '/home/ubuntu/caffe/'
@@ -119,7 +120,7 @@ def getNeighbor(query_path=""):
 	# return (list(dist.argsort()[:20]), zip(top_col[query_ft.argsort()[::-1][:5]], np.sort(query_ft)[::-1][:5]))
 	return dist
 
-def getNeighbor_fine(query_path=""):
+def getNeighbor_fine(factor = 0.5, query_path=""):
 
 	###### Test Input Query #######
 
@@ -142,7 +143,13 @@ def getNeighbor_fine(query_path=""):
 	#query_ft = query_ft / query_ft.sum()
 	dist = np.apply_along_axis(getDist, 1, cnn_ft, query_ft)
 
-	return (list(dist.argsort()[:20]), zip(ctg[query_ft.argsort()[::-1][:5]], np.sort(query_ft)[::-1][:5]))
+	### Get the result of color histogram computation
+	c_h = color_hist_test.colDistance(3, query_path)
+
+	# Combine the score
+	total_score = factor * dist + (1 - factor) * c_h[0]
+
+	return (list(total_score.argsort()[:20]), zip(ctg[query_ft.argsort()[::-1][:5]], np.sort(query_ft)[::-1][:5]), c_h[1], list(np.sort(total_score)[:20])) 
 	#return list(dist.argsort()[:20] + 1)
 
 if __name__ == '__main__':
