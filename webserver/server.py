@@ -3,7 +3,7 @@ import os
 import base64
 import sys
 import numpy as np
-from binascii import a2b_base64
+import color_hist_test
 import type_classification
 from flask import Flask, g, render_template, request, url_for, redirect
 from flask.ext.images import resized_img_src
@@ -55,14 +55,17 @@ def upload_img():
 @app.route('/file_result', methods=['GET','POST'])
 def find_result():
     try:
-        filename = "test.jpg"
-        idset_querydata = type_classification.getNeighbor_fine('static/uploads/'+filename)
+        factor = request.form['factor'] # get color/type weight
+        filename = request.form['name']
+        idset_querydata = type_classification.getNeighbor_fine(0, 'static/uploads/'+filename)
 
         # for debug
         #####
         #idset_querydata = range(2)
         #idset_querydata[0] = range(1, 11)
-        #####
+        #idset_querydata[1] = ((1,1), (1,1),(1,1),(1,1),(1,1))
+        ###
+
         db = get_db()
         result = []
         nameSet = set() # get unique image results
@@ -78,12 +81,9 @@ def find_result():
         
         cnn_ft = np.load("cnn_prob_large_fine.npy")
         top_ctg = open("category_label.txt").readlines()
-        #top_index = [int(i.split(',')[0]) for i in top_ctg]
-        #cnn_ft = cnn_ft[:, top_index] 
-        #cnn_ft = np.transpose(np.transpose(cnn_ft) / cnn_ft.sum(axis=1))
         
-        #top_ctg = open("top_categories.txt")
-        #top_col = [i.split(',')[1].strip()[10:] for i in top_ctg]
+        #hist = np.load("color_hist(no crop).npy")
+
         pic_data = []
         for _index_ in idset_querydata[0]:
             #_index_ -= 1
@@ -93,10 +93,6 @@ def find_result():
                 col_score.append(( top_ctg[c], cnn_ft[_index_][c] )) 
             pic_data.append(col_score)
         print(pic_data)
-
-        ### debug
-        #idset_querydata[1] = ((1,1), (1,1),(1,1),(1,1),(1,1))
-        ###
 
         entries = [dict(name=row[0], gender=row[1], type=row[2], source=row[3], path="/crawlImages_large/" + row[4]) for row in result]
         return render_template('upload.html', entries=entries, filename=filename, pic_data=pic_data, querydata=idset_querydata[1])

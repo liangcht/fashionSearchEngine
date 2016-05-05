@@ -116,8 +116,8 @@ def getNeighbor(query_path=""):
 	query_ft = query_ft / query_ft.sum()
 	dist = np.apply_along_axis(getDist, 1, cnn_ft, query_ft)
 
-	return (list(dist.argsort()[:20]), zip(top_col[query_ft.argsort()[::-1][:5]], np.sort(query_ft)[::-1][:5]))
-	#return list(dist.argsort()[:20] + 1)
+	# return (list(dist.argsort()[:20]), zip(top_col[query_ft.argsort()[::-1][:5]], np.sort(query_ft)[::-1][:5]))
+	return dist
 
 def getNeighbor_fine(query_path=""):
 
