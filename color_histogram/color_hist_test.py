@@ -6,7 +6,8 @@ except ImportError:
     import Image
 # from matplotlib import pyplot as plt
 import numpy as np
-import csv
+import math
+import type_classification.py
 
 def store_as_csv (directory=""):
 	files = []
@@ -122,50 +123,25 @@ def colDistance (bins, query_path):
 	dist = np.apply_along_axis(getDist, 1, hist, query_array)
 	# print dist
 
-	return (list(dist.argsort()[:20]+1))
+	return dist
+	# return (list(dist.argsort()[:20]+1))
 
-def get_combined_result(factor, bins, query_path):
-	### CNN distance.
-	image = caffe.io.load_image(query_path)
-	net.blobs['data'].data[...] = transformer.preprocess('data', image)
+def getDistance(factor, query_path):
+	bins = 3;
+	cnn_dist = type_classification.getNeighbor(query_path)
+	color_hist = colDistance(bins, query_path)
 
-	# perform classification
-	net.forward()
-	query_ft = net.blobs['prob'].data[0]
-
-	cnn_ft = np.load("cnn_prob_large_google.npy")
-	
-	top_ctg = open("top_categories.txt")
-	top_index = [int(i.split(',')[0]) for i in top_ctg]
-	top_ctg = open("top_categories.txt")
-	top_col = np.array([i[6:].strip()[10:] for i in top_ctg])
-	cnn_ft = cnn_ft[:, top_index] 
-	cnn_ft = np.transpose(np.transpose(cnn_ft) / cnn_ft.sum(axis=1))
-	query_ft = query_ft[top_index]
-	query_ft = query_ft / query_ft.sum()
-	cnn_dist = np.apply_along_axis(getDist, 1, cnn_ft, query_ft)
-
-	### color distance
-	query_ht = color_hist(bins, query_path)
-	query_array = np.array(query_ht)
-
-	# open the matrix for color histogram
-	color_hist = np.load("color_hist(no crop).npy")
-
-	color_dist = np.apply_along_axis(getDist, 1, color_hist, query_array)
-
-	result = np.zeros((color_dist.shape[0],1))
-	for i in range(color_dist.shape[0]):
-		result[i] = factor * cnn_dist[i] + (1-factor) * color_dist[i]
+	result = np.zeros((cnn_dist.shape[0],1))
+	for i in range(color_hist.shape[0]):
+		result[i] = factor * cnn_dist[i] + (1 - factor) * color_hist[i]
 
 	return (list(result.argsort()[:20]+1))
 
-
-
+""" for debug
 query_path = "/Users/cyan/Desktop/color_hist_py/1.jpg"
 ind_list = colDistance(3, query_path)
 print ind_list
-
+"""
 
 
 

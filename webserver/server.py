@@ -3,8 +3,7 @@ import os
 import base64
 import sys
 import numpy as np
-from binascii import a2b_base64
-import type_classification
+import color_hist_tes.py 
 from flask import Flask, g, render_template, request, url_for, redirect
 from flask.ext.images import resized_img_src
 from werkzeug import secure_filename
@@ -55,14 +54,17 @@ def upload_img():
 @app.route('/file_result', methods=['GET','POST'])
 def find_result():
     try:
-        filename = "test.jpg"
-        idset_querydata = type_classification.getNeighbor('static/uploads/'+filename)
+        factor = request.form['factor'] # get color/type weight
+        filename = request.form['name']
+        idset_querydata = color_hist_test.getDistance(factor, 'static/uploads/'+filename)
 
         # for debug
         #####
         #idset_querydata = range(2)
         #idset_querydata[0] = range(1, 11)
-        #####
+        #idset_querydata[1] = ((1,1), (1,1),(1,1),(1,1),(1,1))
+        ###
+
         db = get_db()
         result = []
         nameSet = set() # get unique image results
@@ -75,8 +77,8 @@ def find_result():
                 nameSet.add(rst[0])
             if len(result) >= 10:
                 break
-                
-        cnn_ft = np.load("cnn_prob_large_google.npy")
+
+        cnn_ft = np.load("cnn_prob.npy")
         top_ctg = open("top_categories.txt")
         top_index = [int(i.split(',')[0]) for i in top_ctg]
         cnn_ft = cnn_ft[:, top_index] 
@@ -94,11 +96,7 @@ def find_result():
                 col_score.append(( top_col[c], cnn_ft[_index_][c] )) 
             pic_data.append(col_score)
 
-        ### debug
-        #idset_querydata[1] = ((1,1), (1,1),(1,1),(1,1),(1,1))
-        ###
-
-        entries = [dict(name=row[0], gender=row[1], type=row[2], source=row[3], path="/largeImageNoNoise/" + row[4]) for row in result]
+        entries = [dict(name=row[0], gender=row[1], type=row[2], source=row[3], path="/crawlImages_large/" + row[4]) for row in result]
         return render_template('upload.html', entries=entries, filename=filename, pic_data=pic_data, querydata=idset_querydata[1])
     except:
         print("error when rendering result")

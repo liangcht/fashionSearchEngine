@@ -1,3 +1,4 @@
+<!doctype html>
 <html>
   <head xmlns="http://www.w3.org/1999/xhtml">
     <meta name="viewport" content="width=device-width">
@@ -35,7 +36,8 @@
       <input type="button" value="Crop Image" class="btn btn-large btn-inverse" onclick="crop_image()" />
     </form>
     <form action="/file_result" method="post">
-      <input type = "hidden" name="name" value="test.jpg">
+      <input type="hidden" name="factor" value="1">
+      <input type="hidden" name="name" value="test.jpg">
       <input type="submit" value="Find it now!">
     </form>
     </div>
