@@ -71,7 +71,7 @@ def find_result():
         db = get_db()
         result = []
         scoreSet = set() # get unique image results
-        idset = set()
+        selected_ind = []
         for index, _id_ in enumerate(idset_querydata[0]):
             rst = db.execute(
                 'SELECT name, gender, type, source, path FROM amazon WHERE id = ?', (_id_, )
@@ -79,25 +79,29 @@ def find_result():
             if idset_querydata[3][index] not in scoreSet:
                 result.append(rst)
                 scoreSet.add(idset_querydata[3][index])
-                idset.add(_id_)
+                selected_ind.append(_id_)
             if len(result) >= 10:
                 break
         
-        cnn_ft = np.load("crop_cnn_prob_large_fine.npy")
+        # Top20 cnn score
+        cnn_ft = idset_querydata[5]
         top_ctg = open("category_label.txt").readlines()
         
-        #hist = np.load("color_hist(crop).npy")
+        # Top20 histogram
+        hist = idset_querydata[4]
 
         pic_data = []
-        for _index_ in idset_querydata[0]:
-            if _index_ not in idset:
-                continue
+        top_colors = []
+        for _index_ in selected_ind:
+            #if _index_ not in idset:
+            #    continue
             #_index_ -= 1
             col = cnn_ft[_index_].argsort()[::-1][:5]
             col_score = []
             for c in col:
                 col_score.append(( top_ctg[c], cnn_ft[_index_][c] )) 
             pic_data.append(col_score)
+            top_colors.append(hist[_index_].argmax())
 
         # ave color
         print(idset_querydata[3])
