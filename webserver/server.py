@@ -61,7 +61,6 @@ def find_result():
         mode = request.form['mode']
         fac = float(factor) / 10.0
         idset_querydata = type_classification.getNeighbor_fine(fac, 'static/uploads/'+filename)
-
         # for debug
         #####
         #idset_querydata = range(2)

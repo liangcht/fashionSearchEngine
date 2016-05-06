@@ -7,10 +7,11 @@ import os
 os.environ['GLOG_minloglevel'] = '3' 
 import caffe
 import color_hist_test
+import dct
 
 ######### Initialize caffe model ##########
 #caffe_root = '/home/ubuntu/caffe/'
-caffe_root = '/Users/tj474474/Development/caffe/'  
+caffe_root = '/Users/mcchu/dev/caffe/'  
 caffe.set_mode_cpu()
 #caffe.set_mode_gpu()
 #caffe.set_device(0)  # if we have multiple GPUs, pick the first one
@@ -22,7 +23,7 @@ model_def = caffe_root + 'models/finetune_flickr_style/deploy.prototxt'
 #model_def = caffe_root + 'models/bvlc_googlenet/deploy.prototxt'
 #model_weights = caffe_root + 'models/bvlc_googlenet/bvlc_googlenet.caffemodel'
 #model_weights = "/home/ubuntu/VDB/finetune_flickr_style_iter_7000.caffemodel"#
-model_weights = "/Users/tj474474/Development/visual_database/finetune_flickr_style_iter_7000.caffemodel"
+model_weights = "finetune_flickr_style_iter_7000.caffemodel"
 
 net = caffe.Net(model_def,      # defines the structure of the model
                 model_weights,  # contains the trained weights
@@ -131,7 +132,7 @@ def getNeighbor_fine(factor = 0.5, query_path=""):
 	net.forward()
 	query_ft = net.blobs['prob'].data[0]
 
-	cnn_ft = np.load("cnn_prob_large_fine.npy")
+	cnn_ft = np.load("crop_cnn_prob_large_fine.npy")
 	
 	ctg_f = open("category_label.txt")
 	#top_index = [int(i.split(',')[0]) for i in top_ctg]
@@ -145,9 +146,12 @@ def getNeighbor_fine(factor = 0.5, query_path=""):
 
 	### Get the result of color histogram computation
 	c_h = color_hist_test.colDistance(3, query_path)
-
+	print("color done")
+	### Get the result of dct transform computation
+	dct_dist = dct.DCTDistance(query_path)
+	print("dct done")
 	# Combine the score
-	total_score = factor * dist + (1 - factor) * c_h[0]
+	total_score = factor * dist + (1 - factor) * dct_dist
 
 	return (list(total_score.argsort()[:20]), zip(ctg[query_ft.argsort()[::-1][:5]], np.sort(query_ft)[::-1][:5]), c_h[1], list(np.sort(total_score)[:20])) 
 	#return list(dist.argsort()[:20] + 1)
