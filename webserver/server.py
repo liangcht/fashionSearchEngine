@@ -53,73 +53,13 @@ def upload_img():
         print("error when saving cropped imgage")
         return "error"
 
-# ajax refresh only the result div
-@app.route('/refresh', methods=['GET', 'POST'])
-def refresh():
-    try:
-        factor = request.form['factor'] # get color/type weight
-        filename = request.form['name']
-        mode = request.form['mode']
-        fac = float(factor) / 10.0
-        print(fac)
-        idset_querydata = type_classification.getNeighbor_fine(fac, 'static/uploads/'+filename)
-
-        # for debug
-        #####
-        #idset_querydata = range(2)
-        #idset_querydata[0] = range(1, 11)
-        #idset_querydata[1] = ((1,1), (1,1),(1,1),(1,1),(1,1))
-        ###
-
-        db = get_db()
-        result = []
-        scoreSet = set() # get unique image results
-        idset = set()
-        for index, _id_ in enumerate(idset_querydata[0]):
-            rst = db.execute(
-                'SELECT name, gender, type, source, path FROM amazon WHERE id = ?', (_id_, )
-            ).fetchone()
-            if idset_querydata[3][index] not in scoreSet:
-                result.append(rst)
-                scoreSet.add(idset_querydata[3][index])
-                idset.add(_id_)
-            if len(result) >= 10:
-                break
-        
-        cnn_ft = np.load("cnn_prob_large_fine.npy")
-        top_ctg = open("category_label.txt").readlines()
-        
-        #hist = np.load("color_hist(no crop).npy")
-
-        pic_data = []
-        for _index_ in idset_querydata[0]:
-            if _index_ not in idset:
-                continue
-            #_index_ -= 1
-            col = cnn_ft[_index_].argsort()[::-1][:5]
-            col_score = []
-            for c in col:
-                col_score.append(( top_ctg[c], cnn_ft[_index_][c] )) 
-            pic_data.append(col_score)
-        print(pic_data)
-
-        entries = [dict(name=row[0], gender=row[1], type=row[2], source=row[3], path="/crawlImages_large/" + row[4]) for row in result]
-        print("render result")
-        return render_template('result.html', entries=entries, pic_data=pic_data, fac=factor)
-    except:
-        print("error when rendering result")
-        return render_template('index.html', entries=[dict(error='invalid image type.')])
-
-
 @app.route('/file_result', methods=['GET','POST'])
 def find_result():
     try:
         factor = request.form['factor'] # get color/type weight
         filename = request.form['name']
         mode = request.form['mode']
-
         fac = float(factor) / 10.0
-        print(fac)
         idset_querydata = type_classification.getNeighbor_fine(fac, 'static/uploads/'+filename)
 
         # for debug
@@ -144,10 +84,10 @@ def find_result():
             if len(result) >= 10:
                 break
         
-        cnn_ft = np.load("cnn_prob_large_fine.npy")
+        cnn_ft = np.load("crop_cnn_prob_large_fine.npy")
         top_ctg = open("category_label.txt").readlines()
         
-        #hist = np.load("color_hist(no crop).npy")
+        #hist = np.load("color_hist(crop).npy")
 
         pic_data = []
         for _index_ in idset_querydata[0]:
@@ -160,9 +100,16 @@ def find_result():
                 col_score.append(( top_ctg[c], cnn_ft[_index_][c] )) 
             pic_data.append(col_score)
 
+        # ave color
+        print(idset_querydata[3])
+
         entries = [dict(name=row[0], gender=row[1], type=row[2], source=row[3], path="/crawlImages_large/" + row[4]) for row in result]
-        print("render upload")
-        return render_template('upload.html', entries=entries, filename=filename, pic_data=pic_data, querydata=idset_querydata[1], fac=factor)
+        if (mode == '0'):
+            print("render upload")
+            return render_template('upload.html', entries=entries, filename=filename, pic_data=pic_data, querydata=idset_querydata[1])
+        elif (mode == '1'):
+            print("render result")
+            return render_template('result.html', entries=entries, pic_data=pic_data)
     except:
         print("error when rendering result")
         return render_template('index.html', entries=[dict(error='invalid image type.')])

@@ -10,10 +10,10 @@ function imageHandler(e2)
   img.id = myimage;
 
   console.log("2: " + img.width);
-  var new_imgwidth = 300;
+  var new_imgwidth = 500;
   scale = img.width / new_imgwidth;
 
-  img.width = 300;
+  img.width = new_imgwidth;
   store.innerHTML='<img width=' + img.width + ' src="' + e2.target.result +'" id="' + myimage + '"/>';
   // var myimagesrc = document.getElementById('myimage').src;
 
