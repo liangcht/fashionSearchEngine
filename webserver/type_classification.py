@@ -144,13 +144,14 @@ def getNeighbor_fine(factor = 0.5, query_path=""):
 	dist = np.apply_along_axis(getDist, 1, cnn_ft, query_ft)
 
 	### Get the result of color histogram computation
+	# ch is (distance array, query's top color, all images' color histogram)
 	c_h = color_hist_test.colDistance(3, query_path)
 
-	# Combine the score
+	# Combine the score and get get top 20's index
 	total_score = factor * dist + (1 - factor) * c_h[0]
-
-	return (list(total_score.argsort()[:20]), zip(ctg[query_ft.argsort()[::-1][:5]], np.sort(query_ft)[::-1][:5]), c_h[1], list(np.sort(total_score)[:20])) 
-	#return list(dist.argsort()[:20] + 1)
+	top_20 = list(total_score.argsort()[:20])
+	
+	return (top_20, zip(ctg[query_ft.argsort()[::-1][:5]], np.sort(query_ft)[::-1][:5]), c_h[1], list(np.sort(total_score)[:20]), c_h[2], cnn_ft) 
 
 if __name__ == '__main__':
 	pass
