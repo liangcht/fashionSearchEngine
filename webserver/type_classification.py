@@ -151,7 +151,7 @@ def getNeighbor_fine(factor = 0.5, query_path=""):
 	total_score = factor * dist + (1 - factor) * c_h[0]
 	top_20 = list(total_score.argsort()[:20])
 	
-	return (top_20, zip(ctg[query_ft.argsort()[::-1][:5]], np.sort(query_ft)[::-1][:5]), c_h[1], list(np.sort(total_score)[:20]), c_h[2], cnn_ft) 
+	return (top_20, zip(ctg[query_ft.argsort()[::-1][:5]], np.sort(query_ft)[::-1][:5]), c_h[1], list(np.sort(total_score)[:20]), c_h[2][top_20], cnn_ft[top_20]) 
 
 if __name__ == '__main__':
 	pass
