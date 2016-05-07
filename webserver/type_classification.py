@@ -145,13 +145,13 @@ def getNeighbor_fine(factor = 0.5, query_path=""):
 	dist = np.apply_along_axis(getDist, 1, cnn_ft, query_ft)
 
 	### Get the result of color histogram computation
-	# ch is (distance array, query's top color, all images' color histogram)
+	#ch is (distance array, query's top color, all images' color histogram)
 	c_h = color_hist_test.colDistance(3, query_path)
 
 	print("color done")
 	### Get the result of dct transform computation
 	dct_dist = dct.DCTDistance(query_path)
-	print("dct done")
+	#print("dct done")
 
 	# Combine the score and get get top 20's index
 	total_score = factor * dist + (1 - factor) * c_h[0]
