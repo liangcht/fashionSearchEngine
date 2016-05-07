@@ -79,7 +79,7 @@ def find_result():
             if idset_querydata[3][index] not in scoreSet:
                 result.append(rst)
                 scoreSet.add(idset_querydata[3][index])
-                selected_ind.append(_id_)
+                selected_ind.append(index)
             if len(result) >= 10:
                 break
         
@@ -93,9 +93,6 @@ def find_result():
         pic_data = []
         top_colors = []
         for _index_ in selected_ind:
-            #if _index_ not in idset:
-            #    continue
-            #_index_ -= 1
             col = cnn_ft[_index_].argsort()[::-1][:5]
             col_score = []
             for c in col:
