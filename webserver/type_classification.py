@@ -7,7 +7,7 @@ import os
 os.environ['GLOG_minloglevel'] = '3' 
 import caffe
 import color_hist_test
-import dct
+import dct_99
 
 ######### Initialize caffe model ##########
 #caffe_root = '/home/ubuntu/caffe/'
@@ -18,12 +18,12 @@ caffe.set_mode_cpu()
 
 
 #model_def = caffe_root + 'models/bvlc_reference_caffenet/deploy.prototxt'
-model_def = caffe_root + 'models/finetune_flickr_style/deploy.prototxt'
+model_def = 'deploy.prototxt'
 #model_weights = caffe_root + 'models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel'
 #model_def = caffe_root + 'models/bvlc_googlenet/deploy.prototxt'
 #model_weights = caffe_root + 'models/bvlc_googlenet/bvlc_googlenet.caffemodel'
 #model_weights = "/home/ubuntu/VDB/finetune_flickr_style_iter_7000.caffemodel"#
-model_weights = "finetune_flickr_style_iter_7000.caffemodel"
+model_weights = "LR001_tune_all_iter_999.caffemodel"
 
 net = caffe.Net(model_def,      # defines the structure of the model
                 model_weights,  # contains the trained weights
@@ -94,7 +94,7 @@ def getMatrix():
 		#print zip(output_prob[top_inds], labels[top_inds])
 
 	np.save(open("cnn_prob_large_fine.npy", 'wb'), cnn_ft)
-
+'''
 def getNeighbor(query_path=""):
 
 	###### Test Input Query #######
@@ -120,11 +120,11 @@ def getNeighbor(query_path=""):
 
 	# return (list(dist.argsort()[:20]), zip(top_col[query_ft.argsort()[::-1][:5]], np.sort(query_ft)[::-1][:5]))
 	return dist
+'''
 
-def getNeighbor_fine(factor = 0.5, query_path=""):
+def getNeighbor_fine(factor = 0.5, win_size = 20, query_path=""):
 
 	###### Test Input Query #######
-
 	image = caffe.io.load_image(query_path)
 	net.blobs['data'].data[...] = transformer.preprocess('data', image)
 
@@ -132,7 +132,7 @@ def getNeighbor_fine(factor = 0.5, query_path=""):
 	net.forward()
 	query_ft = net.blobs['prob'].data[0]
 
-	cnn_ft = np.load("crop_cnn_prob_large_fine.npy")
+	cnn_ft = np.load("crop_cnn_prob_large_fine_VGG999.npy")
 	
 	ctg_f = open("category_label.txt")
 	#top_index = [int(i.split(',')[0]) for i in top_ctg]
@@ -143,21 +143,24 @@ def getNeighbor_fine(factor = 0.5, query_path=""):
 	#query_ft = query_ft[top_index]
 	#query_ft = query_ft / query_ft.sum()
 	dist = np.apply_along_axis(getDist, 1, cnn_ft, query_ft)
+	winner = list(dist.argsort()[:win_size])
 
 	### Get the result of color histogram computation
 	#ch is (distance array, query's top color, all images' color histogram)
 	c_h = color_hist_test.colDistance(3, query_path)
 
-	print("color done")
 	### Get the result of dct transform computation
-	dct_dist = dct.DCTDistance(query_path)
+	dct_dist = dct_99.DCTDistance(query_path)
 	#print("dct done")
 
 	# Combine the score and get get top 20's index
-	total_score = factor * dist + (1 - factor) * c_h[0]
-	top_20 = list(total_score.argsort()[:20])
-	
-	return (top_20, zip(ctg[query_ft.argsort()[::-1][:5]], np.sort(query_ft)[::-1][:5]), c_h[1], list(np.sort(total_score)[:20]), c_h[2][top_20], cnn_ft[top_20]) 
+	total_score = factor * dct_dist + (1 - factor) * c_h[0]
+
+	selected_score_pair = [(total_score[id], id) for id in winner]
+	selected_score_pair.sort()
+	final_winner = [selected_score_pair[i][1] for i in xrange(20)] 
+	print(final_winner)
+	return (final_winner, zip(ctg[query_ft.argsort()[::-1][:5]], np.sort(query_ft)[::-1][:5]), c_h[1], list(np.sort(total_score)[:win_size]), c_h[2][final_winner], cnn_ft[final_winner]) 
 
 if __name__ == '__main__':
 	pass

@@ -140,7 +140,7 @@ def doDCT (filename):
 	return dct_result
 
 def store_dct_model (directory=""):
-	"Store DCT model."
+	"""Store DCT model."""
 	nFiles = 28583
 	# The number of dimension in DCT of an image.
 	val_num = 30
@@ -172,11 +172,11 @@ def getDist(target, query):
 	return np.linalg.norm(query - target)
 
 def DCTDistance(query_path):
-	"compute DCT distance."
+	"""compute DCT distance."""
 	query_dct = doDCT(query_path)
 	query_array = np.array(query_dct)
 
-	dct_model = np.load("dct_model(no crop).npy")
+	dct_model = np.load("dct_model_99(crop).npy")
 	dist = np.apply_along_axis(getDist, 1, dct_model, query_array)
 
 	return dist
