@@ -9,7 +9,7 @@ function imageHandler(e2)
   img.src = e2.target.result;
   img.id = myimage;
 
-  console.log("2: " + img.width);
+  //console.log("2: " + img.width);
   var new_imgwidth = 500;
   scale = img.width / new_imgwidth;
 
@@ -87,7 +87,9 @@ function crop_image()
 
   $.ajax({
       url: '/file_result',
-      data: {'factor': 5, // color/type factor default: 0.5
+      data: {
+            'size': 14271, // window size default: 20
+            'factor': 5, // color/type factor default: 0.5
             'name': 'test.jpg',
             'mode': 0
       },

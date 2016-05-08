@@ -59,8 +59,9 @@ def find_result():
         factor = request.form['factor'] # get color/type weight
         filename = request.form['name']
         mode = request.form['mode']
+        win_size = int(request.form['size']) # scale into actual window size
         fac = float(factor) / 10.0
-        idset_querydata = type_classification.getNeighbor_fine(fac, 'static/uploads/'+filename)
+        idset_querydata = type_classification.getNeighbor_fine(fac, win_size, 'static/uploads/'+filename)
         # for debug
         #####
         #idset_querydata = range(2)
@@ -101,7 +102,7 @@ def find_result():
             top_colors.append(hist[_index_].argmax())
 
         # ave color
-        print(idset_querydata[3])
+        #print(idset_querydata[3])
 
         entries = [dict(name=row[0], gender=row[1], type=row[2], source=row[3], path="/crawlImages_large/" + row[4]) for row in result]
         if (mode == '0'):

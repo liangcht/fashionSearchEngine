@@ -7,7 +7,6 @@
     <link href="css/master.css" rel="stylesheet" type="text/css" media="screen" />
     <link href="css/screen.css" rel="stylesheet" type="text/css" media="screen" />
     <script type="text/javascript" src="js/yetii-min.js"></script>
-    <script type="text/javascript" src="js/result.js"></script>
     <!-- slider -->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
@@ -22,19 +21,35 @@
     </div>
 
     <div class="container content">
-      <div id="slider">
+      <div style="text-align: center">
         <script>
           $(function() {
-          $( "#slider-range-max" ).slider({
+
+          $( "#window_s").slider({
+            range: "max",
+            min: 20,
+            max: 28542,
+            value: 14271,
+            //slide: refresh,
+            change: refresh
+          });
+          $( "#factor_s" ).slider({
             range: "max",
             min: 0,
             max: 10,
             value: 5,
-            slide: function( event, ui ) {
-              $( "#amount" ).val( ui.value );
+            //slide: refresh,
+            change: refresh
+          });
+          });
+
+          function refresh() {
+            var v1 = $("#window_s").slider("value");
+            var v2 = $("#factor_s").slider("value");
               $.ajax({
                 url: '/file_result',
-                data: {'factor': ui.value,
+                data: {'size': v1,
+                      'factor': v2,
                       'name': 'test.jpg',
                       'mode': 1
                 },
@@ -43,24 +58,37 @@
                   // data = $.parseJSON(rawData);
                   console.log("success");
                   // console.log(data['name']);
+                  console.log(v1 + ", " + v2);
                   $( "#result" ).html(data);
                 },
                 error: function(error) {
                   console.log("error");
                 }
               });
-            }
-          });
-          $( "#amount" ).val( $( "#slider-range-max" ).slider( "value" ) );
-          });
+          }
         </script>
-          <p>
-          <label for="amount">factor:</label>
-          <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
-          </p>
-          <div style="width:500;"><div id="slider-range-max"></div></div>
+          <div style="padding-bottom:2px;"><div id="window_s"></div></div>
+          <div style="padding-bottom:10px; padding-top:10px;"><span style="float: left;">color</span><span style="float: right;">texture</span><div id="factor_s"></div></div>
       </div>
     	<div id="tab-container-1">
+        <script>
+        function refresh_img(node){
+        var address;
+  if(node.src.indexOf('?')>-1){
+    address = node.src.split('?')[0];
+  }
+  else {
+    address = node.src;
+    node.src = address+"?time="+new Date().getTime();
+    console.log(node.src);
+  }
+}
+window.onload = function(){
+  var node = document.getElementById('stored_qimg');
+  refresh_img(node);
+}
+
+        </script>
         <div class="span-5">
             <img id="stored_qimg" src="/uploads/{{filename}}" width="210" alt="" />
             <p class="info"><strong>Score:</strong>
@@ -103,7 +131,7 @@
     </div>
     <div class="container footer">
       <p class="credit">We are: mc chu, lc tsai, jz zhou</p>
-      <p>This is a prototype.</p>
+      <p>This is a clothes matching system.</p>
     </div>
     <!-- gallery effect -->
     <script type="text/javascript">
@@ -111,5 +139,6 @@
       id: 'tab-container-1'
       });
     </script>
+    
   </body>
 </html>
