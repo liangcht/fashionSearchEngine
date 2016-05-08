@@ -7,7 +7,7 @@ except ImportError:
 # from matplotlib import pyplot as plt
 import numpy as np
 import math
-#import type_classification.py
+import time
 
 def store_as_csv (directory=""):
 	files = []
@@ -115,7 +115,7 @@ def colDistance (bins, query_path):
 	dist = np.apply_along_axis(getDist, 1, hist, query_array)
 	# print dist
 
-	return (dist, query_array.argmax(), hist)
+	return dist #(dist, query_array.argmax(), hist)
 
 """ for debug
 query_path = "/Users/cyan/Desktop/color_hist_py/1.jpg"

@@ -7,7 +7,7 @@ except ImportError:
 # from matplotlib import pyplot as plt
 import numpy as np
 import math
-import type_classification.py
+#import type_classification.py
 
 def store_as_csv (directory=""):
 	files = []
@@ -123,19 +123,19 @@ def colDistance (bins, query_path):
 	dist = np.apply_along_axis(getDist, 1, hist, query_array)
 	# print dist
 
-	return dist
+	return (dist, query_array.argmax())
 	# return (list(dist.argsort()[:20]+1))
 
-def getDistance(factor, query_path):
-	bins = 3;
-	cnn_dist = type_classification.getNeighbor(query_path)
-	color_hist = colDistance(bins, query_path)
+#def getDistance(factor, query_path):
+#	bins = 3;
+#	cnn_dist = type_classification.getNeighbor(query_path)
+#	color_hist = colDistance(bins, query_path)
 
-	result = np.zeros((cnn_dist.shape[0],1))
-	for i in range(color_hist.shape[0]):
-		result[i] = factor * cnn_dist[i] + (1 - factor) * color_hist[i]
+#	result = np.zeros((cnn_dist.shape[0],1))
+#	for i in range(color_hist.shape[0]):
+#		result[i] = factor * cnn_dist[i] + (1 - factor) * color_hist[i]
 
-	return (list(result.argsort()[:20]+1))
+#	return (list(result.argsort()[:20]+1))
 
 """ for debug
 query_path = "/Users/cyan/Desktop/color_hist_py/1.jpg"

@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 from scipy.fftpack import dct
 # from matplotlib import pyplot as plt
+import time
 
 def doDCT_natural (filename):
 	# Another way: img = Image.open(filename).convert('L')
@@ -222,5 +223,5 @@ def energy_99 ():
 # print mean
 # print med
 
-store_dct_model()
+#store_dct_model()
 
