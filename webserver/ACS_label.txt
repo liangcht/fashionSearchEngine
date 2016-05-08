@@ -1,0 +1,15 @@
+blouses
+cloak
+coat
+jacket
+long dress
+polo shirt, sport shirt
+robe
+shirt
+short dress
+suit, suit of clothes
+sweater
+jersey, T-shirt, tee shirt
+undergarment, upper body
+uniform
+vest, waistcoat
