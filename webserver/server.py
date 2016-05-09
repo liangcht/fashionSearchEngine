@@ -6,6 +6,7 @@ import numpy as np
 import json
 import color_hist_test
 import type_classification
+import dct_99
 from flask import Flask, g, render_template, request, url_for, redirect
 from flask.ext.images import resized_img_src
 from werkzeug import secure_filename
@@ -39,6 +40,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 @app.route('/upload_img', methods=['GET', 'POST'])
+
 def upload_img():
     img = request.form['img']
     img = img.split(",", 1)[1]
@@ -48,10 +50,27 @@ def upload_img():
         fd = open('static/uploads/' + filename, 'w')
         fd.write(decode_img)
         fd.close()
+
+        # Compute the distance for query image
+        query_path = 'static/uploads/' + filename
+        CNN_result = type_classification.getCNNresult(query_path)
+        global CNN_dist 
+        CNN_dist = CNN_result[0]
+        global col_dist 
+        col_dist = color_hist_test.colDistance(3, query_path)
+        global DCT_dist
+        DCT_dist = dct_99.DCTDistance(query_path)
+        global query_type_result
+        query_type_result  = CNN_result[1]
+        global cnn_ft 
+        cnn_ft = CNN_result[2]
+        
         return "success"
     except:
         print("error when saving cropped imgage")
         return "error"
+
+    
 
 @app.route('/file_result', methods=['GET','POST'])
 def find_result():
@@ -61,7 +80,42 @@ def find_result():
         mode = request.form['mode']
         win_size = int(request.form['size']) # scale into actual window size
         fac = float(factor) / 10.0
-        idset_querydata = type_classification.getNeighbor_fine(fac, win_size, 'static/uploads/'+filename)
+        #idset_querydata = type_classification.getNeighbor_fine(fac, win_size, 'static/uploads/'+filename)
+        
+        winner = list(CNN_dist.argsort()[:win_size])
+        total_score = fac * DCT_dist + (1 - fac) * col_dist
+        selected_score_pair = [(total_score[id], id) for id in winner]
+        selected_score_pair.sort()
+        final_winner = [selected_score_pair[i][1] for i in xrange(20)]
+        final_winner_scores = [selected_score_pair[i][0] for i in xrange(20)]
+
+
+        db = get_db()
+        result = []
+        scoreSet = set() # get unique image results
+        selected_id = []
+        for index, _id_ in enumerate(final_winner):
+            rst = db.execute(
+                'SELECT name, gender, type, source, path FROM amazon WHERE id = ?', (_id_, )
+            ).fetchone()
+            if final_winner_scores[index] not in scoreSet:
+                result.append(rst)
+                scoreSet.add(final_winner_scores[index])
+                selected_id.append(_id_)
+            if len(result) >= 10:
+                break
+
+        top_ctg = open("ACS_label.txt").readlines()
+
+        pic_data = []
+        top_colors = []
+        for _id_ in selected_id:
+            col = cnn_ft[_id_].argsort()[::-1][:5]
+            col_score = []
+            for c in col:
+                col_score.append(( top_ctg[c], cnn_ft[_id_][c] )) 
+            pic_data.append(col_score)
+
         # for debug
         #####
         #idset_querydata = range(2)
@@ -69,45 +123,10 @@ def find_result():
         #idset_querydata[1] = ((1,1), (1,1),(1,1),(1,1),(1,1))
         ###
 
-        db = get_db()
-        result = []
-        scoreSet = set() # get unique image results
-        selected_ind = []
-        for index, _id_ in enumerate(idset_querydata[0]):
-            rst = db.execute(
-                'SELECT name, gender, type, source, path FROM amazon WHERE id = ?', (_id_, )
-            ).fetchone()
-            if idset_querydata[3][index] not in scoreSet:
-                result.append(rst)
-                scoreSet.add(idset_querydata[3][index])
-                selected_ind.append(index)
-            if len(result) >= 10:
-                break
-        
-        # Top20 cnn score
-        cnn_ft = idset_querydata[5]
-        top_ctg = open("category_label.txt").readlines()
-        
-        # Top20 histogram
-        hist = idset_querydata[4]
-
-        pic_data = []
-        top_colors = []
-        for _index_ in selected_ind:
-            col = cnn_ft[_index_].argsort()[::-1][:5]
-            col_score = []
-            for c in col:
-                col_score.append(( top_ctg[c], cnn_ft[_index_][c] )) 
-            pic_data.append(col_score)
-            top_colors.append(hist[_index_].argmax())
-
-        # ave color
-        #print(idset_querydata[3])
-
         entries = [dict(name=row[0], gender=row[1], type=row[2], source=row[3], path="/crawlImages_large/" + row[4]) for row in result]
         if (mode == '0'):
             print("render upload")
-            return render_template('upload.html', entries=entries, filename=filename, pic_data=pic_data, querydata=idset_querydata[1])
+            return render_template('upload.html', entries=entries, filename=filename, pic_data=pic_data, querydata=query_type_result)
         elif (mode == '1'):
             print("render result")
             return render_template('result.html', entries=entries, pic_data=pic_data)

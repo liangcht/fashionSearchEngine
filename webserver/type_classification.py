@@ -12,7 +12,7 @@ import time
 
 ######### Initialize caffe model ##########
 #caffe_root = '/home/ubuntu/caffe/'
-caffe_root = '/Users/tj474474/Development/caffe/'  
+#caffe_root = '/Users/tj474474/Development/caffe/'  
 caffe.set_mode_cpu()
 #caffe.set_mode_gpu()
 #caffe.set_device(0)  # if we have multiple GPUs, pick the first one
@@ -34,7 +34,7 @@ net = caffe.Net(model_def,      # defines the structure of the model
                 caffe.TEST)     # use test mode (e.g., don't perform dropout)
 
 # load the mean ImageNet image (as distributed with Caffe) for subtraction
-mu = np.load(caffe_root + 'python/caffe/imagenet/ilsvrc_2012_mean.npy')
+mu = np.load('./ilsvrc_2012_mean.npy')
 mu = mu.mean(1).mean(1)  # average over pixels to obtain the mean (BGR) pixel values
 
 # create transformer for the input called 'data'
