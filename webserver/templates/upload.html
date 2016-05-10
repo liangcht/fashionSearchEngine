@@ -11,45 +11,41 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    <link rel="stylesheet" href="/resources/demos/style.css">
+    <!--<link rel="stylesheet" href="/resources/demos/style.css">-->
   </head>
   <body>
     <div class="container header">
       <h1>Similar outfits</h1>
       <h3>These are similiar outfits found online</h3>
-      <a href="/" type="button">Return</a>
     </div>
 
     <div class="container content">
-      <div style="text-align: center">
         <script>
           $(function() {
-
-          $( "#window_s").slider({
-            range: "max",
-            min: 20,
-            max: 28542,
-            value: 5484,
-            //slide: refresh,
-            change: refresh
+            $( "#weight1" ).slider({
+              orientation: "vertical",
+              range: "min",
+              min: 0,
+              max: 10,
+              value: 5,
+              change: refresh
+            });
+            $( "#weight3" ).slider({
+              orientation: "vertical",
+              range: "min",
+              min: 0,
+              max: 9,
+              value: 6,
+              change: refresh
+            });
           });
-          $( "#factor_s" ).slider({
-            range: "max",
-            min: 0,
-            max: 10,
-            value: 5,
-            //slide: refresh,
-            change: refresh
-          });
-          });
-
           function refresh() {
-            var v1 = $("#window_s").slider("value");
-            var v2 = $("#factor_s").slider("value");
+            var w1 = $("#weight1").slider("value");
+            var w3 = $("#weight3").slider("value");
               $.ajax({
                 url: '/file_result',
-                data: {'size': v1,
-                      'factor': v2,
+                data: {'w1': w1,
+                      'w3': w3,
                       'name': 'test.jpg',
                       'mode': 1
                 },
@@ -58,7 +54,7 @@
                   // data = $.parseJSON(rawData);
                   console.log("success");
                   // console.log(data['name']);
-                  console.log(v1 + ", " + v2);
+                  console.log(w1 + ", " + w3);
                   $( "#result" ).html(data);
                 },
                 error: function(error) {
@@ -67,29 +63,23 @@
               });
           }
         </script>
-          <div style="padding-bottom:2px;"><div id="window_s"></div></div>
-          <div style="padding-bottom:10px; padding-top:10px;">
-            <div id="factor_s"></div>
-            <div style="padding-bottom:10px; padding-top:10px;"><span style="float: left;">color</span><span style="float: right;">texture</span></div>
-          </div>
-      </div>
-    	<div id="tab-container-1">
-        <script>
-        function refresh_img(node){
-        var address;
-  if(node.src.indexOf('?')>-1){
-    address = node.src.split('?')[0];
-  }
-  else {
-    address = node.src;
-    node.src = address+"?time="+new Date().getTime();
-    console.log(node.src);
-  }
-}
-window.onload = function(){
-  var node = document.getElementById('stored_qimg');
-  refresh_img(node);
-}
+          	<div id="tab-container-1">
+      <script>
+      function refresh_img(node){
+      var address;
+        if(node.src.indexOf('?')>-1){
+          address = node.src.split('?')[0];
+        }
+        else {
+          address = node.src;
+          node.src = address+"?time="+new Date().getTime();
+          console.log(node.src);
+        }
+      }
+      window.onload = function(){
+        var node = document.getElementById('stored_qimg');
+        refresh_img(node);
+      }
 
         </script>
         <div class="span-5">
@@ -99,6 +89,27 @@ window.onload = function(){
                 {{score[0]}}: {{score[1]}} <br>
               {% endfor %}
             </p>
+            <style>
+             #weight1 .ui-slider-range { background: #FFFFCC; }
+             #weight3 .ui-slider-range { background: #CCFFFF; }
+             #weight1 .ui-slider-handle { width: 25px; }
+             #weight3 .ui-slider-handle { width: 25px; }
+            </style>
+            <table style="height:150px; margin-top:20px; margin-left:20px; padding-right: 20px">
+              <tr>
+              <th>Step 1.</th><th>Step 2.</th>
+              </tr>
+              <tr>
+              <td>Filter types</td><td>Adjust</br>proportion</td>
+              </tr>
+              <tr>
+              <td><div id="weight3" style="height:150px;width:25px"></div></td>
+              <td><div id="weight1" style="height:150px;width:25px"></div></td>
+            </tr>
+            <tr>
+              <td>window</br>size</td><td>texture</br><span style="float: center">&nbsp;&nbsp;&nbsp;^</span></br>&nbsp;&nbsp;&nbsp;|</br>&nbsp;&nbsp;&nbsp;v</br>color</td>
+            </tr>
+            </table>
         </div>
         <div id="result">
           <div class="span-13">

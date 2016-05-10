@@ -12,6 +12,8 @@ from flask.ext.images import resized_img_src
 from werkzeug import secure_filename
 from werkzeug.datastructures import FileStorage
 from sets import Set
+from decimal import Decimal
+import math
 
 SQLITE_DB_PATH = '../amazon/test_large_no_noise.db'
 # SQLITE_DB_SCHEMA = '../amazon/try_db.sql'
@@ -75,20 +77,19 @@ def upload_img():
 @app.route('/file_result', methods=['GET','POST'])
 def find_result():
     try:
-        factor = request.form['factor'] # get color/type weight
+        weight1 = float(request.form['w1'])/10.0 # get color/type weight
+        weight3 = int(request.form['w3'])
         filename = request.form['name']
         mode = request.form['mode']
-        win_size = int(request.form['size']) # scale into actual window size
-        fac = float(factor) / 10.0
+        win_size = int(20 + (math.pow(2, weight3)-1)/(math.pow(2,9))*28522) #window size
         #idset_querydata = type_classification.getNeighbor_fine(fac, win_size, 'static/uploads/'+filename)
-        
+        print(win_size)
         winner = list(CNN_dist.argsort()[:win_size])
-        total_score = fac * DCT_dist + (1 - fac) * col_dist
+        total_score = weight1 * DCT_dist + (1 - weight1) * col_dist
         selected_score_pair = [(total_score[id], id) for id in winner]
         selected_score_pair.sort()
         final_winner = [selected_score_pair[i][1] for i in xrange(20)]
         final_winner_scores = [selected_score_pair[i][0] for i in xrange(20)]
-
 
         db = get_db()
         result = []
@@ -98,22 +99,24 @@ def find_result():
             rst = db.execute(
                 'SELECT name, gender, type, source, path FROM amazon WHERE id = ?', (_id_, )
             ).fetchone()
-            if final_winner_scores[index] not in scoreSet:
+            if round(final_winner_scores[index], 6) not in scoreSet:
                 result.append(rst)
-                scoreSet.add(final_winner_scores[index])
+                scoreSet.add(round(final_winner_scores[index], 6))
                 selected_id.append(_id_)
             if len(result) >= 10:
                 break
+        print (final_winner_scores)
 
+        #top_ctg = open("category_label.txt").readlines()
         top_ctg = open("ACS_label.txt").readlines()
 
         pic_data = []
         top_colors = []
         for _id_ in selected_id:
-            col = cnn_ft[_id_].argsort()[::-1][:5]
+            col = cnn_ft[_id_].argsort()[::-1][:3]
             col_score = []
             for c in col:
-                col_score.append(( top_ctg[c], cnn_ft[_id_][c] )) 
+                col_score.append(( top_ctg[c], round(cnn_ft[_id_][c], 2) )) 
             pic_data.append(col_score)
 
         # for debug

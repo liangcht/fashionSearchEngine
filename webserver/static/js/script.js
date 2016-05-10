@@ -87,9 +87,8 @@ function crop_image()
 
   $.ajax({
       url: '/file_result',
-      data: {
-            'size': 5484, // window size default: 20
-            'factor': 5, // color/type factor default: 0.5
+      data: {'w1': 5, // color/type factor default: 0.5
+            'w3': 6,
             'name': 'test.jpg',
             'mode': 0
       },
