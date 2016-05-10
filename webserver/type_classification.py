@@ -12,7 +12,6 @@ import time
 
 ######### Initialize caffe model ##########
 #caffe_root = '/home/ubuntu/caffe/'
-#caffe_root = '~/dev/caffe/'  
 caffe.set_mode_cpu()
 #caffe.set_mode_gpu()
 #caffe.set_device(0)  # if we have multiple GPUs, pick the first one
@@ -26,7 +25,7 @@ model_def = './deploy_Alex.prototxt'
 #model_weights = caffe_root + 'models/bvlc_googlenet/bvlc_googlenet.caffemodel'
 #model_weights = "/home/ubuntu/VDB/finetune_flickr_style_iter_7000.caffemodel"#
 #model_weights = "../LR001_tune_all_iter_VGG999.caffemodel"
-#model_weights = "../finetune_flickr_style_iter_7000.caffemodel"
+#model_weights = "./finetune_flickr_style_iter_7000.caffemodel"
 model_weights = "../ACS_alexNet_iter_10000.caffemodel"
 
 net = caffe.Net(model_def,      # defines the structure of the model
@@ -34,7 +33,7 @@ net = caffe.Net(model_def,      # defines the structure of the model
                 caffe.TEST)     # use test mode (e.g., don't perform dropout)
 
 # load the mean ImageNet image (as distributed with Caffe) for subtraction
-mu = 'ilsvrc_2012_mean.npy'
+mu = np.load('./ilsvrc_2012_mean.npy')
 mu = mu.mean(1).mean(1)  # average over pixels to obtain the mean (BGR) pixel values
 
 # create transformer for the input called 'data'
@@ -90,12 +89,15 @@ def getCNNresult(query_path):
 
 	#cnn_ft = np.load("crop_cnn_prob_large_fine_VGG999.npy")
 	cnn_ft = np.load("crop_cnn_prob_large_fine_Alex_ACS_10000.npy")
+	#cnn_ft = np.load("crop_cnn_prob_large_fine.npy")
 
+	#ctg_f = open("category_label.txt")
 	ctg_f = open("ACS_label.txt")
 	ctg = np.array(ctg_f.readlines())
 	dist = np.apply_along_axis(getDist, 1, cnn_ft, query_ft)
+	query_rst= np.sort(query_ft)[::-1][:3]
 
-	return (dist, zip(ctg[query_ft.argsort()[::-1][:5]], np.sort(query_ft)[::-1][:5]), cnn_ft)
+	return (dist, zip(ctg[query_ft.argsort()[::-1][:3]], np.around(query_rst, decimals=2)), cnn_ft)
 
 def getNeighbor_fine(factor = 0.5, win_size = 20, query_path=""):
 
@@ -133,7 +135,7 @@ def getNeighbor_fine(factor = 0.5, win_size = 20, query_path=""):
 	
 	final_winner = [selected_score_pair[i][1] for i in xrange(20)]
 	final_winner_scores = [selected_score_pair[i][0] for i in xrange(20)] 
-	query_type_result = zip(ctg[query_ft.argsort()[::-1][:5]], np.sort(query_ft)[::-1][:5])
+	query_type_result = zip(ctg[query_ft.argsort()[::-1][:3]], np.sort(query_ft)[::-1][:3])
 	
 	return (final_winner,  query_type_result, query_col, final_winner_scores, 0, cnn_ft[final_winner]) 
 
